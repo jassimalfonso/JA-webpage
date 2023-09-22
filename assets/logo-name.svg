@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170.08 170.06">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-3 {
+        font-family: Inter-Medium, Inter;
+        font-size: 8px;
+        font-variation-settings: 'wght' 500, 'slnt' 0;
+        font-weight: 500;
+        letter-spacing: .25em;
+      }
+
+      .cls-3, .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="Layer_2-2" data-name="Layer 2">
+    <rect id="Frame" class="cls-1" x="0" y="0" width="170.08" height="170.06"/>
+    <polygon id="J" class="cls-2" points="101.44 35.42 134.63 35.42 134.63 130.11 35.42 130.11 35.42 96.94 101.44 96.94 101.44 35.42"/>
+    <polygon id="A" class="cls-2" points="92.42 35.42 35.42 63.93 92.42 92.42 92.42 35.42"/>
+    <text class="cls-3" transform="translate(37.03 142.2)"><tspan x="0" y="0">JASSIM ALFONSO</tspan></text>
+  </g>
+</svg>
