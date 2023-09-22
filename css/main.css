@@ -15,31 +15,32 @@ body {
 .container .logo {
 	width: 30%;
 	height: 30%;
-	animation: 4s pulse ease-in-out infinite;
-	transition: opacity 1s ease-out, transform .1s ease-out 1s;
+	/* animation: 4s pulse ease-in-out infinite; */
+	opacity: 1;
+	z-index: 1;
+	/* transition: opacity .5s ease-out, transform .1s ease-out .5s; */
 }
-.container .logo:hover {
+/* .container .logo:hover {
 	animation-play-state: paused;
-}
+} */
 
 .container .banner {
 	/* display: none; */
-	opacity: 0%;
 	width: 100%;
 	height: 100%;
 	/* box-shadow: 0 0 100px rgba(255, 255, 255, 0.5); */
 	position: absolute;
+	opacity: 0;
 	z-index: -1;
 }
 
 .fade-out {
-	opacity: 0;
-	transform: scale(0);
-	z-index: -9;
+	animation: .5s fadeOut ease-out .5s forwards;
+	z-index: -1;
 }
 
 .fade-in {
-	animation: 1s fadeIn ease-in 1s forwards;
+	animation: .5s fadeIn ease-in .5s forwards;
 	z-index: 1;
 }
 
@@ -59,5 +60,29 @@ body {
 	}
 	to {
 		opacity: 1;
+	}
+}
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+@keyframes scaleOut {
+	from {
+		scale: 1;
+	}
+	to {
+		scale: 0;
+	}
+}
+@keyframes scaleIn {
+	from {
+		scale: 0;
+	}
+	to {
+		scale: 1;
 	}
 }
