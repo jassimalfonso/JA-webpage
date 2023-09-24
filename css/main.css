@@ -34,6 +34,44 @@ body {
 	z-index: -1;
 }
 
+/* .container2 {
+	height: 19rem;
+	width: 18rem;
+	background-color: black;
+	position: relative;
+	right: -20%;
+	z-index: -10;
+}
+
+.container2 .triangle {
+	background-color: transparent;
+	height: 0;
+	width: 0;
+	border: 5rem solid transparent;
+	border-left: 0;
+	border-right: 10rem solid rgb(255, 255, 255);
+	position: absolute;
+	top: 5%;
+	left: 0;
+}
+
+.container2 .right {
+	width: 6.5rem;
+	height: 90%;
+	background-color: white;
+	position: absolute;
+	top: 5%;
+	right: 0;
+}
+.container2 .base {
+	height: 6.5rem;
+	width: 100%;
+	background-color: white;
+	position: absolute;
+	bottom: 5%;
+
+} */
+
 .fade-out {
 	animation: .5s fadeOut ease-out .5s forwards;
 	z-index: -1;
