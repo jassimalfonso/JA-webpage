@@ -1,4 +1,5 @@
-body {
+/* VERSION 01 */
+/* body {
 	background-color: black;
 	margin: 0;
 }
@@ -15,62 +16,17 @@ body {
 .container .logo {
 	width: 30%;
 	height: 30%;
-	/* animation: 4s pulse ease-in-out infinite; */
 	opacity: 1;
 	z-index: 1;
-	/* transition: opacity .5s ease-out, transform .1s ease-out .5s; */
 }
-/* .container .logo:hover {
-	animation-play-state: paused;
-} */
 
 .container .banner {
-	/* display: none; */
 	width: 100%;
 	height: 100%;
-	/* box-shadow: 0 0 100px rgba(255, 255, 255, 0.5); */
 	position: absolute;
 	opacity: 0;
 	z-index: -1;
 }
-
-/* .container2 {
-	height: 19rem;
-	width: 18rem;
-	background-color: black;
-	position: relative;
-	right: -20%;
-	z-index: -10;
-}
-
-.container2 .triangle {
-	background-color: transparent;
-	height: 0;
-	width: 0;
-	border: 5rem solid transparent;
-	border-left: 0;
-	border-right: 10rem solid rgb(255, 255, 255);
-	position: absolute;
-	top: 5%;
-	left: 0;
-}
-
-.container2 .right {
-	width: 6.5rem;
-	height: 90%;
-	background-color: white;
-	position: absolute;
-	top: 5%;
-	right: 0;
-}
-.container2 .base {
-	height: 6.5rem;
-	width: 100%;
-	background-color: white;
-	position: absolute;
-	bottom: 5%;
-
-} */
 
 .fade-out {
 	animation: .5s fadeOut ease-out .5s forwards;
@@ -81,7 +37,6 @@ body {
 	animation: .5s fadeIn ease-in .5s forwards;
 	z-index: 1;
 }
-
 
 @keyframes pulse {
 	0% {
@@ -100,6 +55,7 @@ body {
 		opacity: 1;
 	}
 }
+
 @keyframes fadeOut {
 	from {
 		opacity: 1;
@@ -108,6 +64,7 @@ body {
 		opacity: 0;
 	}
 }
+
 @keyframes scaleOut {
 	from {
 		scale: 1;
@@ -116,6 +73,7 @@ body {
 		scale: 0;
 	}
 }
+
 @keyframes scaleIn {
 	from {
 		scale: 0;
@@ -123,4 +81,77 @@ body {
 	to {
 		scale: 1;
 	}
+} */
+
+/* VERSION 02 */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: black;
+	color: white;
+	font-family: 'Inter', sans-serif;
+}
+
+nav {
+	max-width: 1200px;
+	margin: auto;
+	padding: 2rem 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+nav .nav-logo {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1.5em;
+	max-width: 240px;
+}
+
+nav .nav-logo img {
+	height: 3.5em;
+	width: 3.5em;
+}
+
+nav .nav-logo h1 {
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: .10em;
+	text-transform: uppercase;
+}
+
+nav .nav-links ul {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 5em;
+	list-style: none;
+}
+
+nav .nav-links a {
+	text-decoration: none;
+	color: white;
+	padding-bottom: 0.75rem;
+	position: relative;
+	text-transform: uppercase;
+}
+
+nav .nav-links a::after {
+	content: "";
+	position: absolute;
+	height: 3px;
+	width: 0;
+	bottom: 0;
+	left: 0;
+	background-color: white;
+	transition: all 0.3s ease;
+}
+
+nav .nav-links a:hover::after {
+	width: 80%;
 }
