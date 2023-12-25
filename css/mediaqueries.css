@@ -1,9 +1,13 @@
-@media screen and (max-width: 700px) {
-	.nav-links {
+@media screen and (max-width: 800px) {
+	#desktop-nav {
 		display: none;
 	}
 
-	body::before {
-		content: "I will be adding the burger icon to the right.";
+	#hamburger-nav {
+		display: flex;
+	}
+
+	.nav-links {
+		flex-direction: column;
 	}
 }
