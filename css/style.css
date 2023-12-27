@@ -95,7 +95,7 @@ a:hover::after {
 	text-transform: uppercase;
 }
 
-/* HAMBURGER */
+/* HAMBURGER MENU */
 
 #hamburger-nav {
 	display: none;
@@ -112,6 +112,7 @@ a:hover::after {
 	justify-content: space-between;
 	height: 24px;
 	width: 30px;
+	cursor: pointer;
 }
 
 .hamburger-icon span {
@@ -123,15 +124,53 @@ a:hover::after {
 
 .menu-links {
 	position: absolute;
-	top: 100%;
+	top: 200%;
 	right: 0%;
-	background-color: gray;
+	/* background-color: white; */
 	width: fit-content;
 	max-height: 0;
 	overflow: hidden;
 	transition: all 0.3s ease-in-out;
 }
 
+.menu-links a {
+	display: block;
+	padding: 10px;
+	text-align: left;
+	/* font-size: 1.5rem; */
+	color: white;
+	text-decoration: none;
+	transition: all 0.3s ease-in-out;
+}
 
+.menu-links a:hover {
+	color: gray;
+}
 
+.menu-links li {
+	list-style: none;
+}
 
+.menu-links.open {
+	max-height: 300px;
+}
+
+.hamburger-icon.open span:first-child {
+	transform: rotate(45deg) translate(10px, 5px);
+}
+.hamburger-icon.open span:nth-child(2) {
+	opacity: 0;
+}
+.hamburger-icon.open span:last-child {
+	transform: rotate(-45deg) translate(10px, -5px);
+}
+
+.hamburger-icon span:first-child {
+	transform: none;
+}
+.hamburger-icon span:first-child {
+	opacity: 1;
+}
+.hamburger-icon span:first-child {
+	transform: none;
+}
