@@ -65,7 +65,7 @@ a::after {
 }
 
 a:hover::after {
-	width: 80%;
+	width: 100%;
 }
 
 /* LOGO */
@@ -173,4 +173,71 @@ a:hover::after {
 }
 .hamburger-icon span:first-child {
 	transform: none;
+}
+
+/* MAIN */
+#main {
+	margin: 10em auto;
+	max-width: 1400px;
+	display: flex;
+	flex-direction: column;
+	gap: 10em;
+	justify-content: space-between;
+	text-align: center;
+	/* background-color: aliceblue; */
+}
+
+#main h2 {
+	transition: all 0.3s ease;
+	padding: 10px;
+}
+
+#main h2:hover {
+	background-color: #ffffff46;
+}
+/* PROJECTS */
+
+#projects {
+	/* margin: auto; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 4em;
+	flex-wrap: wrap;
+}
+.project-showcase {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	height: 25em;
+	/* background-color: white;
+	color: black; */
+	gap: 2em;
+}
+
+.project-showcase a {
+	margin: 0;
+	padding: 0;
+}
+
+.project-showcase p {
+	transition: all 0.3s ease;
+	padding: 10px;
+}
+
+.project-showcase p:hover {
+	background-color: #ffffff46;
+}
+
+.project-showcase img {
+	width: 18em;
+	height: 18em;
+	object-fit: cover;
+	transition: all 0.3s ease;
+}
+
+.project-showcase img:hover {
+	scale: 1.05;
 }
