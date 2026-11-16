@@ -391,6 +391,96 @@
 		})(t0);
 	};
 
+	/* =====================================================
+	   THE AFORM SHOW — cut fillers, keep the voice, make the reel
+	   f1 = um / uh (safe to cut) · f2 = "like", "you know" (judgement call)
+	   hurt = a word an aggressive tool cuts that actually carried meaning
+	   ===================================================== */
+	demos.aform = (root) => {
+		const RAW = "So [um] the thing about good architecture is, [uh] you don't notice it. {you know} You just {feel} {like} the room is right. {Like,} it's the light, and the [um] the way sound sits in the space.";
+		const words = RAW.match(/\[[^\]]+\]|\{[^}]+\}|[^\s]+/g).map((w) => {
+			if (w.startsWith("[")) return { t: w.slice(1, -1), k: "f1", d: 0.55 };
+			if (w.startsWith("{")) return { t: w.slice(1, -1), k: "f2", d: 0.4 };
+			return { t: w, k: "w", d: 0.28 + (w.length > 6 ? 0.1 : 0) };
+		});
+		// in "feel like the room is right", "like" is meaning, not filler: a blunt tool still cuts it
+		words.forEach((w, i) => { if (w.t === "feel") w.k = "w"; if (w.t === "like" && words[i - 1] && words[i - 1].t === "feel") w.hurt = true; });
+		const MODES = {
+			raw: { label: "raw", cut: () => false, note: "straight from the mic: every um, every pause." },
+			ear: { label: "by ear", cut: (w) => w.k === "f1", note: "the ums and uhs go. the rhythm, the “you know” — the person — stays." },
+			blunt: { label: "auto tool", cut: (w) => w.k !== "w" || w.hurt, note: "every filler gone — and “feel like” lost its “like”. faster, but it doesn't sound like them anymore." },
+		};
+		let mode = "raw";
+
+		root.innerHTML = `
+			<div class="af-grid">
+				<div>
+					<div class="af-modes mono" role="radiogroup" aria-label="Edit">
+						${Object.entries(MODES).map(([k, m]) => `<button type="button" data-mode="${k}" class="${k === mode ? "on" : ""}">${m.label}</button>`).join("")}
+					</div>
+					<div class="af-wave" aria-hidden="true">${words.map((w) => `<i class="${w.k === "w" ? "" : "f"}" style="flex-grow:${w.d.toFixed(2)};height:${(w.k === "w" ? 35 + Math.random() * 65 : 12 + Math.random() * 20).toFixed(0)}%"></i>`).join("")}</div>
+					<p class="af-text">${words.map((w) => `<span class="${w.k === "w" ? "" : w.k}">${w.t}</span>`).join(" ")}</p>
+					<dl class="af-stats mono">
+						<div><dt>length</dt><dd data-v="len">0</dd></div>
+						<div><dt>cut</dt><dd data-v="cut">0</dd></div>
+						<div><dt>sounds like them</dt><dd data-v="tone">—</dd></div>
+					</dl>
+					<p class="af-note mono pl-hint"></p>
+				</div>
+				<div>
+					<div class="af-reel">
+						<div class="af-reel-top mono"><span>reel</span><span data-v="t">0:00</span></div>
+						<p class="af-cap" aria-live="off"></p>
+						<span class="af-bar"></span>
+					</div>
+					<button type="button" class="af-play mono">▶ play reel captions</button>
+				</div>
+			</div>`;
+
+		const spans = $$(".af-text span", root), bars = $$(".af-wave i", root);
+		const kept = () => words.filter((w) => !MODES[mode].cut(w));
+		words.forEach((w) => { w.hurt = !!w.hurt; });
+		function render() {
+			words.forEach((w, i) => {
+				const c = !!MODES[mode].cut(w); // force a real boolean: toggle(name, undefined) flips instead of removing
+				spans[i].classList.toggle("cut", c && !w.hurt);
+				spans[i].classList.toggle("hurt", c && !!w.hurt);
+				bars[i].classList.toggle("cut", c);
+			});
+			const total = words.reduce((s, w) => s + w.d, 0), now = kept().reduce((s, w) => s + w.d, 0);
+			$('[data-v="len"]', root).textContent = now.toFixed(1) + " s";
+			$('[data-v="cut"]', root).textContent = Math.round((1 - now / total) * 100) + "%";
+			$('[data-v="tone"]', root).textContent = mode === "blunt" ? "no" : "yes";
+			$(".af-note", root).textContent = MODES[mode].note;
+			$$(".af-modes button", root).forEach((b) => b.classList.toggle("on", b.dataset.mode === mode));
+		}
+		$(".af-modes", root).addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { mode = b.dataset.mode; render(); } });
+
+		// captions: three words at a time, current word highlighted
+		let timer = null;
+		const cap = $(".af-cap", root), bar = $(".af-bar", root), clock = $('[data-v="t"]', root), btn = $(".af-play", root);
+		function stop() { clearTimeout(timer); timer = null; btn.textContent = "▶ play reel captions"; }
+		function play() {
+			if (timer) return stop();
+			const ws = kept().map((w) => ({ ...w, t: w.t.replace(/[.,]$/, "") }));
+			const total = ws.reduce((s, w) => s + w.d, 0);
+			let i = 0, elapsed = 0;
+			btn.textContent = "■ stop";
+			(function step() {
+				if (i >= ws.length) { cap.innerHTML = ""; bar.style.width = "0"; clock.textContent = "0:00"; return stop(); }
+				const start = i - (i % 3);
+				cap.innerHTML = ws.slice(start, start + 3).map((w, k) => (start + k === i ? `<b>${w.t}</b>` : `<span>${w.t}</span>`)).join(" ");
+				elapsed += ws[i].d;
+				bar.style.width = (elapsed / total) * 100 + "%";
+				clock.textContent = "0:" + String(Math.floor(elapsed)).padStart(2, "0");
+				timer = setTimeout(step, ws[i].d * 1000 * 0.9);
+				i++;
+			})();
+		}
+		btn.addEventListener("click", play);
+		render();
+	};
+
 	/* ---------- mount ---------- */
 	$$("[data-demo]").forEach((el) => {
 		const fn = demos[el.dataset.demo];

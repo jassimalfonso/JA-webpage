@@ -3,72 +3,95 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>JASSIM ALFONSO</title>
-	<meta name="description" content="Jassim Alfonso — self-taught, building small loud things for the web.">
-	<meta name="theme-color" content="#000000">
+	<title>JASSIM ALFONSO — takes on challenges, builds the fix</title>
+	<meta name="description" content="Jassim Alfonso — self-taught. Takes on challenges at work, on the web and in the edit, and builds his way through them.">
+	<meta name="theme-color" content="#0d0d0c">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="JASSIM ALFONSO — takes on challenges, builds the fix">
+	<meta property="og:description" content="Jassim Alfonso — self-taught. Takes on challenges at work, on the web and in the edit, and builds his way through them.">
+	<meta property="og:image" content="https://jassimalfonso.netlify.app/assets/og/home.png">
+	<meta property="og:url" content="https://jassimalfonso.netlify.app/">
+	<meta name="twitter:card" content="summary_large_image">
 	<link rel="icon" href="./assets/logo-no-name.svg">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="./css/style.css">
+	<script>try{var t=localStorage.getItem("ja-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"paper":"ink");if(t==="paper")document.documentElement.dataset.theme="paper"}catch(e){}</script>
 </head>
 <body>
+	<a class="skip" href="#main">skip to content</a>
 	<div class="grain" aria-hidden="true"></div>
-
 	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
 		<symbol id="mark" viewBox="0 0 99.21 94.7">
 			<polygon points="66.02 0 99.21 0 99.21 94.7 0 94.7 0 61.52 66.02 61.52 66.02 0"/>
 			<polygon points="57.01 0 0 28.51 57.01 57.01 57.01 0"/>
 		</symbol>
 	</svg>
-
 	<header class="nav">
 		<a href="#top" class="nav-brand" aria-label="Home"><svg><use href="#mark"/></svg></a>
 		<nav aria-label="Primary">
 			<ul class="nav-links mono">
+				<li><a href="#approach" class="hide-sm">/approach</a></li>
 				<li><a href="#work">/work</a></li>
-				<li><a href="#about">/about</a></li>
+				<li><a href="#about" class="hide-sm">/about</a></li>
 				<li><a href="#contact">/contact</a></li>
+				<li class="hide-sm"><button type="button" data-palette aria-label="Open the go-to menu">⌘k</button></li>
+				<li><button type="button" data-theme-toggle>/paper</button></li>
 			</ul>
 		</nav>
 	</header>
 
-	<main id="top">
-		<!-- HERO -->
-		<section class="hero">
+	<main id="main">
+		<section class="hero" id="top">
 			<h1 class="hero-title">
 				<span>Jassim</span>
 				<span>Alfonso<svg class="hero-mark" aria-hidden="true"><use href="#mark"/></svg></span>
 			</h1>
-			<span class="tape mono">self-taught / no templates</span>
-
+			<span class="tape mono">challenge accepted</span>
 			<div class="hero-foot">
 				<p class="hero-sub">
-					I build <s>perfect</s> honest little things for the web.
-					Break them. Fix them. Ship them.
+					I take on challenges — at work, on the web, in the edit — and build my way through them.
+					<s>Perfect</s> Honest tools. Shipped, then sharpened.
 				</p>
-				<a href="#work" class="mono hero-down">↓ the work</a>
+				<a href="#approach" class="mono hero-down">↓ how I work</a>
 			</div>
 		</section>
 
-		<!-- TICKER -->
 		<div class="ticker mono" aria-hidden="true">
 			<div class="ticker-track">
-				<span>still learning</span><b>✕</b><span>still building</span><b>✕</b><span>made by hand</span><b>✕</b><span>view source</span><b>✕</b>
-				<span>still learning</span><b>✕</b><span>still building</span><b>✕</b><span>made by hand</span><b>✕</b><span>view source</span><b>✕</b>
+				<span>take on the challenge</span><b>✕</b><span>build the fix</span><b>✕</b><span>ship it</span><b>✕</b><span>still learning</span><b>✕</b><span>made by hand</span><b>✕</b>
+				<span>take on the challenge</span><b>✕</b><span>build the fix</span><b>✕</b><span>ship it</span><b>✕</b><span>still learning</span><b>✕</b><span>made by hand</span><b>✕</b>
 			</div>
 		</div>
 
-		<!-- WORK -->
+		<section class="section" id="approach">
+			<header class="section-head">
+				<h2>Approach</h2>
+				<span class="mono">[01]</span>
+			</header>
+			<ol class="approach">
+				<li><span class="step">01 / find it</span><h3>Take on the challenge</h3><p>The slow, repeated, easy-to-get-wrong thing everyone has quietly accepted. That's the one.</p></li>
+				<li><span class="step">02 / build it</span><h3>Build the fix</h3><p>The smallest tool that removes the step — by hand, no templates, whatever it takes to learn.</p></li>
+				<li><span class="step">03 / ship it</span><h3>Ship. Sharpen.</h3><p>Real people, real feedback, small releases. It's never done; it just keeps getting better.</p></li>
+			</ol>
+		</section>
+
 		<section class="section" id="work">
 			<header class="section-head">
 				<h2>Work</h2>
-				<span class="mono">[06]</span>
+				<span class="mono">[02]</span>
 			</header>
-
+			<div class="work-filter mono" role="group" aria-label="Filter work">
+				<button type="button" data-kind="all" aria-pressed="true">all</button>
+				<button type="button" data-kind="tools" aria-pressed="false">tools</button>
+				<button type="button" data-kind="apps" aria-pressed="false">apps</button>
+				<button type="button" data-kind="media" aria-pressed="false">audio + video</button>
+				<button type="button" data-kind="learning" aria-pressed="false">learning</button>
+			</div>
 			<ol class="work-list">
-				<li class="row row--feature" data-img="./assets/ikonplan/plan.webp">
-					<a href="./ikonplan.html">
+				<li class="row row--feature" data-kind="tools" data-img="./assets/ikonplan/plan.webp">
+					<a href="./ikonplan.html" data-cursor="open">
 						<span class="row-no mono">01</span>
 						<span class="row-title">ikonplan</span>
 						<span class="row-desc">A design tool a sales team uses every day. <b class="flag mono">featured</b></span>
@@ -76,8 +99,8 @@
 						<span class="row-go">→</span>
 					</a>
 				</li>
-				<li class="row" data-img="./assets/projects/bankcal-today.webp">
-					<a href="./bankcal.html">
+				<li class="row" data-kind="apps" data-img="./assets/projects/bankcal-today.webp">
+					<a href="./bankcal.html" data-cursor="open">
 						<span class="row-no mono">02</span>
 						<span class="row-title">BankCal</span>
 						<span class="row-desc">Calories as a bank balance.</span>
@@ -85,36 +108,45 @@
 						<span class="row-go">→</span>
 					</a>
 				</li>
-				<li class="row" data-img="./assets/png/ja-basketball-scoreboard-v2.png">
-					<a href="./scoreboard.html">
+				<li class="row" data-kind="media" data-img="">
+					<a href="./aform.html" data-cursor="open">
 						<span class="row-no mono">03</span>
+						<span class="row-title">aForm Show</span>
+						<span class="row-desc">Audio + reels for an architecture podcast.</span>
+						<span class="row-tags mono">audio / video</span>
+						<span class="row-go">→</span>
+					</a>
+				</li>
+				<li class="row" data-kind="learning" data-img="./assets/png/ja-basketball-scoreboard-v2.png">
+					<a href="./scoreboard.html" data-cursor="open">
+						<span class="row-no mono">04</span>
 						<span class="row-title">Scoreboard</span>
 						<span class="row-desc">Home. Away. +1 +2 +3.</span>
 						<span class="row-tags mono">js / dom</span>
 						<span class="row-go">→</span>
 					</a>
 				</li>
-				<li class="row" data-img="./assets/png/ja-password-generator.png">
-					<a href="./passgen.html">
-						<span class="row-no mono">04</span>
+				<li class="row" data-kind="learning" data-img="./assets/png/ja-password-generator.png">
+					<a href="./passgen.html" data-cursor="open">
+						<span class="row-no mono">05</span>
 						<span class="row-title">Passgen</span>
 						<span class="row-desc">Strong passwords, one click.</span>
-						<span class="row-tags mono">js</span>
+						<span class="row-tags mono">js / crypto</span>
 						<span class="row-go">→</span>
 					</a>
 				</li>
-				<li class="row" data-img="./assets/png/ja-counter.png">
-					<a href="./counter.html">
-						<span class="row-no mono">05</span>
+				<li class="row" data-kind="learning" data-img="./assets/png/ja-counter.png">
+					<a href="./counter.html" data-cursor="open">
+						<span class="row-no mono">06</span>
 						<span class="row-title">Counter</span>
 						<span class="row-desc">Tap. Count. Save.</span>
 						<span class="row-tags mono">js</span>
 						<span class="row-go">→</span>
 					</a>
 				</li>
-				<li class="row" data-img="./assets/png/ja-hometown-project.png">
-					<a href="./hometown.html">
-						<span class="row-no mono">06</span>
+				<li class="row" data-kind="learning" data-img="./assets/png/ja-hometown-project.png">
+					<a href="./hometown.html" data-cursor="open">
+						<span class="row-no mono">07</span>
 						<span class="row-title">Hometown</span>
 						<span class="row-desc">A page about where I'm from.</span>
 						<span class="row-tags mono">html / css</span>
@@ -125,11 +157,10 @@
 			<div class="preview" aria-hidden="true"><img alt=""></div>
 		</section>
 
-		<!-- ABOUT -->
 		<section class="section about" id="about">
 			<header class="section-head">
 				<h2>About</h2>
-				<span class="mono">[me]</span>
+				<span class="mono">[03]</span>
 			</header>
 			<div class="about-body">
 				<p class="about-lead">
@@ -137,32 +168,31 @@
 				</p>
 				<p class="about-small mono">
 					Day job: wiring up homes so they behave.<br>
+					Show job: editing audio + reels for <a href="./aform.html">The aForm Show</a>.<br>
 					Night job: this.
 				</p>
 			</div>
 		</section>
 
-		<!-- CONTACT -->
 		<section class="section contact" id="contact">
-			<a class="contact-big" href="https://github.com/jassimalfonso" target="_blank" rel="noopener">
+			<a class="contact-big" href="https://www.linkedin.com/in/jassimalfonso/" target="_blank" rel="noopener" data-cursor="say hi">
 				<span>Say</span>
 				<span>hi<em>.</em></span>
 			</a>
 			<ul class="contact-links mono">
+				<li><a href="https://www.linkedin.com/in/jassimalfonso/" target="_blank" rel="noopener">linkedin ↗</a></li>
 				<li><a href="https://github.com/jassimalfonso" target="_blank" rel="noopener">github ↗</a></li>
-				<!-- TODO: add your email and LinkedIn -->
-				<!-- <li><a href="mailto:you@example.com">email ↗</a></li> -->
-				<!-- <li><a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">linkedin ↗</a></li> -->
+				<li><a href="https://linktr.ee/aformshow" target="_blank" rel="noopener">the aform show ↗</a></li>
 			</ul>
 		</section>
 	</main>
 
 	<footer class="footer mono">
-		<span>© <span data-year></span> JA</span>
-		<span>hand-coded. no frameworks.</span>
-		<a href="#top">top ↑</a>
+		<span>© <span data-year></span> JA · <span class="clock" data-clock>dubai</span></span>
+		<span class="hide-sm">press <span class="kbd">/</span> to go anywhere</span>
+		<a href="https://www.linkedin.com/in/jassimalfonso/" target="_blank" rel="noopener">linkedin ↗</a>
+		<a href="#">top ↑</a>
 	</footer>
-
 	<script src="./js/site.js"></script>
 </body>
 </html>

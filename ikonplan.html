@@ -6,13 +6,21 @@
 	<title>ikonplan — case study · JASSIM ALFONSO</title>
 	<meta name="description" content="ikonplan — a browser-based pre-sales design tool for AV and smart-home projects. Case study by Jassim Alfonso.">
 	<meta name="theme-color" content="#0d0d0c">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="ikonplan — case study · JASSIM ALFONSO">
+	<meta property="og:description" content="ikonplan — a browser-based pre-sales design tool for AV and smart-home projects. Case study by Jassim Alfonso.">
+	<meta property="og:image" content="https://jassimalfonso.netlify.app/assets/og/ikonplan.png">
+	<meta property="og:url" content="https://jassimalfonso.netlify.app/ikonplan.html">
+	<meta name="twitter:card" content="summary_large_image">
 	<link rel="icon" href="./assets/logo-no-name.svg">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="./css/style.css">
+	<script>try{var t=localStorage.getItem("ja-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"paper":"ink");if(t==="paper")document.documentElement.dataset.theme="paper"}catch(e){}</script>
 </head>
-<body class="case">
+<body class="case" data-prev="hometown" data-next="bankcal">
+	<a class="skip" href="#main">skip to content</a>
 	<div class="grain" aria-hidden="true"></div>
 	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
 		<symbol id="mark" viewBox="0 0 99.21 94.7">
@@ -25,12 +33,14 @@
 		<nav aria-label="Primary">
 			<ul class="nav-links mono">
 				<li><a href="./index.html#work">← /work</a></li>
+				<li class="hide-sm"><button type="button" data-palette aria-label="Open the go-to menu">⌘k</button></li>
+				<li><button type="button" data-theme-toggle>/paper</button></li>
 			</ul>
 		</nav>
 	</header>
-	<main>
+	<main id="main">
 		<section class="hero hero--case">
-			<p class="mono case-kicker">case study / 2026</p>
+			<p class="mono case-kicker">challenge 01 / 2026</p>
 			<h1 class="hero-title" style="--n:8"><span>ikonplan</span></h1>
 			<span class="tape mono">built at work / used every day</span>
 			<div class="hero-foot">
@@ -46,7 +56,7 @@
 		</dl>
 
 		<section class="section">
-			<header class="section-head"><h2>Problem</h2><span class="mono">[01]</span></header>
+			<header class="section-head"><h2>Challenge</h2><span class="mono">[01]</span></header>
 			<div class="case-body">
 				<p class="case-lead">Same information. Typed <s>once</s> four times.</p>
 				<div class="case-text">
@@ -81,11 +91,11 @@
 			<header class="section-head"><h2>Snaps</h2><span class="mono">[04]</span></header>
 			<p class="mono snaps-note">the real thing, shown with its built-in sample plan — no client data.</p>
 			<div class="snaps">
-				<figure class="snap snap--wide"><img src="./assets/ikonplan/plan.webp" alt="ikonplan with a sample villa floor plan, rooms coloured by type and devices placed" loading="lazy"><figcaption class="mono">01 / the plan — rooms, devices, live counts</figcaption></figure>
-				<figure class="snap"><img src="./assets/ikonplan/welcome.webp" alt="ikonplan start screen with the tools list" loading="lazy"><figcaption class="mono">02 / start screen + tools</figcaption></figure>
-				<figure class="snap"><img src="./assets/ikonplan/boq.webp" alt="Bill of quantities drawer with a room-by-room breakdown" loading="lazy"><figcaption class="mono">03 / boq, room by room</figcaption></figure>
-				<figure class="snap"><img src="./assets/ikonplan/power.webp" alt="Power calculator sizing KNX power supplies" loading="lazy"><figcaption class="mono">04 / power calculator</figcaption></figure>
-				<figure class="snap"><img src="./assets/ikonplan/acoustic.webp" alt="Acoustic configurator for a cinema room" loading="lazy"><figcaption class="mono">05 / acoustic configurator</figcaption></figure>
+				<figure class="snap snap--wide"><img src="./assets/ikonplan/plan.webp" width="1600" height="1000" alt="ikonplan with a sample villa floor plan, rooms coloured by type and devices placed" loading="lazy"><figcaption class="mono">01 / the plan — rooms, devices, live counts</figcaption></figure>
+				<figure class="snap"><img src="./assets/ikonplan/welcome.webp" width="1600" height="1000" alt="ikonplan start screen with the tools list" loading="lazy"><figcaption class="mono">02 / start screen + tools</figcaption></figure>
+				<figure class="snap"><img src="./assets/ikonplan/boq.webp" width="1600" height="1000" alt="Bill of quantities drawer with a room-by-room breakdown" loading="lazy"><figcaption class="mono">03 / boq, room by room</figcaption></figure>
+				<figure class="snap"><img src="./assets/ikonplan/power.webp" width="1600" height="1000" alt="Power calculator sizing KNX power supplies" loading="lazy"><figcaption class="mono">04 / power calculator</figcaption></figure>
+				<figure class="snap"><img src="./assets/ikonplan/acoustic.webp" width="1600" height="1000" alt="Acoustic configurator for a cinema room" loading="lazy"><figcaption class="mono">05 / acoustic configurator</figcaption></figure>
 			</div>
 		</section>
 
@@ -110,8 +120,9 @@
 		</section>
 	</main>
 	<footer class="footer mono">
-		<span>© <span data-year></span> JA</span>
-		<span>hand-coded. no frameworks.</span>
+		<span>© <span data-year></span> JA · <span class="clock" data-clock>dubai</span></span>
+		<span class="hide-sm">press <span class="kbd">/</span> to go anywhere · <span class="kbd">←</span><span class="kbd">→</span> to flip cases</span>
+		<a href="https://www.linkedin.com/in/jassimalfonso/" target="_blank" rel="noopener">linkedin ↗</a>
 		<a href="#">top ↑</a>
 	</footer>
 	<script src="./js/site.js"></script>

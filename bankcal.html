@@ -6,13 +6,21 @@
 	<title>BankCal — case study · JASSIM ALFONSO</title>
 	<meta name="description" content="BankCal — a calorie budget that works like a bank account. Case study by Jassim Alfonso.">
 	<meta name="theme-color" content="#0d0d0c">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="BankCal — case study · JASSIM ALFONSO">
+	<meta property="og:description" content="BankCal — a calorie budget that works like a bank account. Case study by Jassim Alfonso.">
+	<meta property="og:image" content="https://jassimalfonso.netlify.app/assets/og/bankcal.png">
+	<meta property="og:url" content="https://jassimalfonso.netlify.app/bankcal.html">
+	<meta name="twitter:card" content="summary_large_image">
 	<link rel="icon" href="./assets/logo-no-name.svg">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="./css/style.css">
+	<script>try{var t=localStorage.getItem("ja-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"paper":"ink");if(t==="paper")document.documentElement.dataset.theme="paper"}catch(e){}</script>
 </head>
-<body class="case">
+<body class="case" data-prev="ikonplan" data-next="aform">
+	<a class="skip" href="#main">skip to content</a>
 	<div class="grain" aria-hidden="true"></div>
 	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
 		<symbol id="mark" viewBox="0 0 99.21 94.7">
@@ -25,12 +33,14 @@
 		<nav aria-label="Primary">
 			<ul class="nav-links mono">
 				<li><a href="./index.html#work">← /work</a></li>
+				<li class="hide-sm"><button type="button" data-palette aria-label="Open the go-to menu">⌘k</button></li>
+				<li><button type="button" data-theme-toggle>/paper</button></li>
 			</ul>
 		</nav>
 	</header>
-	<main>
+	<main id="main">
 		<section class="hero hero--case">
-			<p class="mono case-kicker">case study / 2026</p>
+			<p class="mono case-kicker">challenge 02 / 2026</p>
 			<h1 class="hero-title" style="--n:7"><span>BankCal</span></h1>
 			<span class="tape mono">your calories, as a bank account</span>
 			<div class="hero-foot">
@@ -46,7 +56,7 @@
 		</dl>
 
 		<section class="section">
-			<header class="section-head"><h2>Problem</h2><span class="mono">[01]</span></header>
+			<header class="section-head"><h2>Challenge</h2><span class="mono">[01]</span></header>
 			<div class="case-body">
 				<p class="case-lead">Counting calories is <s>boring</s> banking.</p>
 				<div class="case-text">
@@ -78,10 +88,10 @@
 		<section class="section">
 			<header class="section-head"><h2>Snaps</h2><span class="mono">[04]</span></header>
 			<div class="phones" data-cursor="drag">
-				<figure><img src="./assets/projects/bankcal-morning.webp" alt="BankCal morning screen showing today's balance as a card" loading="lazy"><figcaption class="mono">good morning</figcaption></figure>
-				<figure><img src="./assets/projects/bankcal-today.webp" alt="BankCal today screen with the remaining balance" loading="lazy"><figcaption class="mono">today</figcaption></figure>
-				<figure><img src="./assets/projects/bankcal-progress.webp" alt="BankCal progress screen with a weekly chart" loading="lazy"><figcaption class="mono">progress</figcaption></figure>
-				<figure><img src="./assets/projects/bankcal-train.webp" alt="BankCal train screen with workout plans" loading="lazy"><figcaption class="mono">train</figcaption></figure>
+				<figure><img src="./assets/projects/bankcal-morning.webp" width="390" height="844" alt="BankCal morning screen showing today's balance as a card" loading="lazy"><figcaption class="mono">good morning</figcaption></figure>
+				<figure><img src="./assets/projects/bankcal-today.webp" width="390" height="844" alt="BankCal today screen with the remaining balance" loading="lazy"><figcaption class="mono">today</figcaption></figure>
+				<figure><img src="./assets/projects/bankcal-progress.webp" width="390" height="844" alt="BankCal progress screen with a weekly chart" loading="lazy"><figcaption class="mono">progress</figcaption></figure>
+				<figure><img src="./assets/projects/bankcal-train.webp" width="390" height="844" alt="BankCal train screen with workout plans" loading="lazy"><figcaption class="mono">train</figcaption></figure>
 			</div>
 			<p class="mono snaps-note">from the app's demo mode — made-up data. drag sideways.</p>
 		</section>
@@ -99,15 +109,16 @@
 		</section>
 
 		<section class="section">
-			<a class="next" href="./scoreboard.html">
-				<span><span class="mono">next case →</span><br><span class="next-title">Scoreboard</span></span>
+			<a class="next" href="./aform.html">
+				<span><span class="mono">next case →</span><br><span class="next-title">aForm Show</span></span>
 				<span class="arrow">→</span>
 			</a>
 		</section>
 	</main>
 	<footer class="footer mono">
-		<span>© <span data-year></span> JA</span>
-		<span>hand-coded. no frameworks.</span>
+		<span>© <span data-year></span> JA · <span class="clock" data-clock>dubai</span></span>
+		<span class="hide-sm">press <span class="kbd">/</span> to go anywhere · <span class="kbd">←</span><span class="kbd">→</span> to flip cases</span>
+		<a href="https://www.linkedin.com/in/jassimalfonso/" target="_blank" rel="noopener">linkedin ↗</a>
 		<a href="#">top ↑</a>
 	</footer>
 	<script src="./js/site.js"></script>
