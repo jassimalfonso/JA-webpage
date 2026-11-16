@@ -188,15 +188,16 @@
 		(function follow() {
 			px += (x - px) * 0.16;
 			py += (y - py) * 0.16;
-			preview.style.left = `${px + 190}px`;
+			preview.style.left = `${px + (px > innerWidth * 0.6 ? -280 : 190)}px`; // flip to the left near the right edge
 			preview.style.top = `${py}px`;
 			requestAnimationFrame(follow);
 		})();
-		$$(".row").forEach((row) => {
+		$$(".row, .hero-index li").forEach((row) => {
 			row.addEventListener("pointerenter", () => {
 				const src = row.dataset.img;
 				preview.classList.toggle("is-text", !src);
-				preview.dataset.label = (row.dataset.label || ($(".row-title", row).dataset.text || $(".row-title", row).textContent)) + ".";
+				const t = $(".row-title", row);
+				preview.dataset.label = (row.dataset.label || (t && (t.dataset.text || t.textContent)) || "") + ".";
 				if (src) img.src = src;
 				preview.classList.add("is-on");
 			});
@@ -229,35 +230,6 @@
 	const toggleTheme = () => setTheme(current() === "paper" ? "ink" : "paper", true);
 	setTheme(current());
 	$$("[data-theme-toggle]").forEach((b) => b.addEventListener("click", toggleTheme));
-
-	/* ---------- hero collage: drag the cut-outs, tap to open ---------- */
-	let topZ = 10;
-	$$(".cut").forEach((el) => {
-		let sx = 0, sy = 0, dx = 0, dy = 0, moved = false, id = null;
-		el.addEventListener("pointerdown", (e) => {
-			if (e.button !== 0) return;
-			id = e.pointerId; moved = false;
-			sx = e.clientX - dx; sy = e.clientY - dy;
-			el.setPointerCapture(id);
-			el.style.zIndex = ++topZ;
-		});
-		el.addEventListener("pointermove", (e) => {
-			if (e.pointerId !== id) return;
-			const nx = e.clientX - sx, ny = e.clientY - sy;
-			if (!moved && Math.hypot(nx - dx, ny - dy) < 6) return;
-			moved = true;
-			el.classList.add("is-drag");
-			dx = nx; dy = ny;
-			el.style.setProperty("--dx", dx + "px");
-			el.style.setProperty("--dy", dy + "px");
-		});
-		const end = (e) => { if (e.pointerId === id) { id = null; el.classList.remove("is-drag"); } };
-		el.addEventListener("pointerup", end);
-		el.addEventListener("pointercancel", end);
-		el.addEventListener("click", (e) => { if (moved) { e.preventDefault(); moved = false; } });
-		el.addEventListener("dragstart", (e) => e.preventDefault());
-	});
-	$$(".cut-wave i").forEach((i, k) => i.style.setProperty("--d", (k * 97) % 900));
 
 	/* ---------- dubai clock ---------- */
 	const clocks = $$("[data-clock]");
