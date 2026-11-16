@@ -19,6 +19,7 @@ Personal site of Jassim Alfonso — minimal / punk, ink and paper, hand-coded. N
 |---|---|
 | `original` | The site exactly as it was before the 2026 revamp. Don't commit to it — treat it as a snapshot |
 | `v2-revamp` | Snapshot of the minimal / punk revamp with case studies and demos |
+| `v3-challenges` | Snapshot with challenges, The aForm Show, light mode, go-to menu and share images |
 | `main` | What's live |
 
 Optional, from your own PC — pin both snapshots as tags too:
