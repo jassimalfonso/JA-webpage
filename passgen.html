@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Passgen — case study · JASSIM ALFONSO</title>
+	<meta name="description" content="Password generator — a Scrimba solo project, rebuilt with proper randomness. Case study by Jassim Alfonso.">
+	<meta name="theme-color" content="#0d0d0c">
+	<link rel="icon" href="./assets/logo-no-name.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="case">
+	<div class="grain" aria-hidden="true"></div>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="mark" viewBox="0 0 99.21 94.7">
+			<polygon points="66.02 0 99.21 0 99.21 94.7 0 94.7 0 61.52 66.02 61.52 66.02 0"/>
+			<polygon points="57.01 0 0 28.51 57.01 57.01 57.01 0"/>
+		</symbol>
+	</svg>
+	<header class="nav">
+		<a href="./index.html" class="nav-brand" aria-label="Home"><svg><use href="#mark"/></svg></a>
+		<nav aria-label="Primary">
+			<ul class="nav-links mono">
+				<li><a href="./index.html#work">← /work</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<section class="hero hero--case">
+			<p class="mono case-kicker">case study / 2025 / scrimba solo project</p>
+			<h1 class="hero-title" style="--n:7"><span>Passgen</span></h1>
+			<span class="tape mono">random enough for secrets</span>
+			<div class="hero-foot">
+				<p class="hero-sub">Two fresh passwords at the press of a button. The rebuild makes them properly random, any length, and one click to copy.</p>
+				<p class="case-links mono"><a href="https://ja-passwordgenerator.netlify.app/" target="_blank" rel="noopener">original ↗</a> <a href="https://github.com/jassimalfonso/scrim-password-generator" target="_blank" rel="noopener">code ↗</a></p>
+			</div>
+		</section>
+		<dl class="facts mono">
+			<div><dt>course</dt><dd>scrimba</dd></div>
+			<div><dt>stack</dt><dd>html / css / js</dd></div>
+			<div><dt>characters</dt><dd><span data-count="91">91</span></dd></div>
+			<div><dt>rebuilt</dt><dd>nov 2026</dd></div>
+		</dl>
+
+		<section class="section">
+			<header class="section-head"><h2>Brief</h2><span class="mono">[01]</span></header>
+			<div class="case-body">
+				<p class="case-lead">Passwords you don't have to think up.</p>
+				<div class="case-text">
+					<p>Take a list of characters, pick 15 at random, twice. Show both, let the person choose.</p>
+					<p>Easy to build. Harder to build right: the “random” I used first isn't meant for secrets.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Try it</h2><span class="mono">[02]</span></header>
+			<div class="demo" data-demo="passgen">
+				<div class="demo-head mono"><span class="live">live — generator</span><span>try it ↓</span></div>
+				<div class="demo-body"></div>
+			</div>
+			<p class="mono snaps-note">click a password to copy it.</p>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>How it works</h2><span class="mono">[03]</span></header>
+			<ol class="how">
+				<li><div><h3>Then: Math.random</h3><p>Fine for games and shuffling. Not for passwords — it is predictable if someone knows enough about the browser state.</p><code class="code">let randIndex = Math.floor(Math.random() * characters.length);</code></div></li>
+				<li><div><h3>Now: the browser's crypto</h3><p>crypto.getRandomValues draws from the operating system's secure randomness — the same source a password manager uses.</p><code class="code">const buf = new Uint32Array(length);
+crypto.getRandomValues(buf);
+const pw = [...buf].map(n =&gt; pool[n % pool.length]).join(&quot;&quot;);</code></div></li>
+				<li><div><h3>How strong is strong?</h3><p>Entropy = length × log₂(pool size). 16 characters from 89 is about 104 bits — far beyond guessing.</p></div></li>
+			</ol>
+		</section>
+
+		<section class="section about">
+			<header class="section-head"><h2>Now I'd</h2><span class="mono">[04]</span></header>
+			<div class="about-body">
+				<p class="about-lead">Working isn't the same as <em>safe</em>.</p>
+				<ul class="now">
+					<li><s>Math.random</s> crypto.getRandomValues</li>
+					<li><s>Always 15</s> pick a length <span>8 to 32, with numbers and symbols optional</span></li>
+					<li><s>Select and copy</s> one click <span>and a little “copied” sticker</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="section">
+			<a class="next" href="./counter.html">
+				<span><span class="mono">next case →</span><br><span class="next-title">Counter</span></span>
+				<span class="arrow">→</span>
+			</a>
+		</section>
+	</main>
+	<footer class="footer mono">
+		<span>© <span data-year></span> JA</span>
+		<span>hand-coded. no frameworks.</span>
+		<a href="#">top ↑</a>
+	</footer>
+	<script src="./js/site.js"></script>
+	<script src="./js/demos.js"></script>
+</body>
+</html>

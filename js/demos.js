@@ -1,0 +1,400 @@
+/* =========================================================
+   JA — interactive demos
+   Each case study has <div class="demo" data-demo="name">.
+   Every demo is a small rebuild of the real thing, in this site's style.
+   ========================================================= */
+(() => {
+	const $ = (s, r = document) => r.querySelector(s);
+	const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+	const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+	const fmt = (n) => Math.round(n).toLocaleString("en-US");
+	const flash = (el) => { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); };
+
+	function tween(el, from, to, dur = 500, f = fmt) {
+		const start = performance.now();
+		(function frame(now) {
+			const t = Math.min(1, (now - start) / dur);
+			el.textContent = f(from + (to - from) * (1 - Math.pow(1 - t, 3)));
+			if (t < 1) requestAnimationFrame(frame);
+		})(start);
+	}
+
+	const demos = {};
+
+	/* =====================================================
+	   IKONPLAN — click the plan to place devices; the BoQ keeps up
+	   ===================================================== */
+	demos.planner = (root) => {
+		const ROOMS = [
+			{ id: "majlis", name: "Majlis", x: 10, y: 10, w: 280, h: 170 },
+			{ id: "living", name: "Living", x: 290, y: 10, w: 300, h: 170 },
+			{ id: "kitchen", name: "Kitchen", x: 10, y: 180, w: 200, h: 190 },
+			{ id: "master", name: "Master Bed", x: 210, y: 180, w: 380, h: 190 },
+		];
+		const DEV = [
+			{ id: "kp", name: "Keypad", s: "K" },
+			{ id: "sp", name: "Speaker", s: "S" },
+			{ id: "ms", name: "Motion sensor", s: "M" },
+			{ id: "th", name: "Thermostat", s: "T" },
+			{ id: "tp", name: "Touch panel", s: "P" },
+		];
+		let pick = "kp", placed = [], uid = 0;
+
+		root.innerHTML = `
+			<div class="pl-tools mono" role="toolbar" aria-label="Devices">
+				${DEV.map((d) => `<button data-dev="${d.id}" class="${d.id === pick ? "on" : ""}"><b>${d.s}</b>${d.name}</button>`).join("")}
+			</div>
+			<div class="pl-grid">
+				<svg class="pl-plan" viewBox="0 0 600 380" role="img" aria-label="Sample floor plan. Click to place the chosen device; click a device to remove it.">
+					<g class="pl-rooms">${ROOMS.map((r) => `
+						<rect class="pl-room" data-room="${r.id}" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}"/>
+						<text class="pl-label" x="${r.x + 12}" y="${r.y + 22}">${r.name.toUpperCase()}</text>`).join("")}
+					</g>
+					<g class="pl-ikons"></g>
+				</svg>
+				<aside class="pl-boq">
+					<p class="mono pl-cap">bill of quantities <span>live</span></p>
+					<table class="pl-table mono"><tbody></tbody></table>
+					<p class="mono pl-cap">by room</p>
+					<ul class="pl-rooms-list mono"></ul>
+				</aside>
+			</div>
+			<div class="pl-actions mono">
+				<button data-act="recipe">✦ apply room recipe</button>
+				<button data-act="clear">clear</button>
+				<span class="pl-hint">click the plan to place · click a device to remove it</span>
+			</div>`;
+
+		const svg = $(".pl-plan", root), layer = $(".pl-ikons", svg);
+		const roomAt = (x, y) => ROOMS.find((r) => x > r.x && x < r.x + r.w && y > r.y && y < r.y + r.h);
+
+		function add(dev, x, y, delay = 0) {
+			const room = roomAt(x, y);
+			if (!room) return;
+			const d = DEV.find((v) => v.id === dev);
+			const p = { id: ++uid, dev, x, y, room: room.id };
+			placed.push(p);
+			const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+			g.setAttribute("class", "ikon");
+			g.setAttribute("transform", `translate(${x} ${y})`);
+			g.dataset.id = p.id;
+			g.dataset.cursor = "remove";
+			g.innerHTML = `<g class="ikon-in" style="animation-delay:${delay}ms"><rect x="-12" y="-12" width="24" height="24"/><text y="5">${d.s}</text></g>`;
+			layer.appendChild(g);
+			render();
+		}
+
+		function render() {
+			const tb = $(".pl-table tbody", root);
+			const count = (fn) => placed.filter(fn).length;
+			tb.innerHTML = DEV.map((d) => `<tr data-row="${d.id}"><td>${d.s}</td><td>${d.name}</td><td>${count((p) => p.dev === d.id)}</td></tr>`).join("") +
+				`<tr class="pl-total"><td></td><td>total</td><td>${placed.length}</td></tr>`;
+			$(".pl-rooms-list", root).innerHTML = ROOMS.map((r) => `<li><span>${r.name}</span><b>${count((p) => p.room === r.id)}</b></li>`).join("");
+		}
+
+		svg.addEventListener("click", (e) => {
+			const ik = e.target.closest(".ikon");
+			if (ik) {
+				placed = placed.filter((p) => p.id !== +ik.dataset.id);
+				ik.classList.add("out");
+				setTimeout(() => ik.remove(), 200);
+				render();
+				return;
+			}
+			const pt = svg.createSVGPoint();
+			pt.x = e.clientX; pt.y = e.clientY;
+			const { x, y } = pt.matrixTransform(svg.getScreenCTM().inverse());
+			add(pick, Math.round(x), Math.round(y));
+			const row = $(`[data-row="${pick}"]`, root);
+			if (row) flash(row);
+		});
+
+		$(".pl-tools", root).addEventListener("click", (e) => {
+			const b = e.target.closest("button");
+			if (!b) return;
+			pick = b.dataset.dev;
+			$$(".pl-tools button", root).forEach((x) => x.classList.toggle("on", x === b));
+		});
+
+		$(".pl-actions", root).addEventListener("click", (e) => {
+			const act = e.target.closest("button")?.dataset.act;
+			if (act === "clear") { placed = []; layer.innerHTML = ""; render(); }
+			if (act === "recipe") {
+				placed = []; layer.innerHTML = "";
+				let n = 0;
+				ROOMS.forEach((r) => {
+					const at = (fx, fy) => [Math.round(r.x + r.w * fx), Math.round(r.y + r.h * fy)];
+					[["kp", ...at(0.1, 0.82)], ["sp", ...at(0.35, 0.5)], ["sp", ...at(0.65, 0.5)], ["ms", ...at(0.5, 0.18)], ["th", ...at(0.9, 0.82)]]
+						.forEach(([d, x, y]) => add(d, x, y, n++ * 45));
+					if (r.w > 290) add("tp", ...at(0.9, 0.18), n++ * 45);
+				});
+			}
+		});
+		render();
+	};
+
+	/* =====================================================
+	   BANKCAL — the real budget maths, and a balance you spend
+	   ===================================================== */
+	demos.bankcal = (root) => {
+		const GOALS = { maintain: 0, lose025: 275, lose05: 550 };
+		const FLOOR = { m: 1500, f: 1200 };
+		const MEALS = [
+			["Karak + paratha", 350], ["Chicken machboos", 750], ["Shawarma", 520],
+			["Turon", 220], ["Apple", 80], ["Iced latte", 190],
+		];
+		const st = { sex: "m", age: 32, height: 173, weight: 83, goal: "lose025", log: [] };
+
+		root.innerHTML = `
+			<div class="bc-grid">
+				<form class="bc-form mono" onsubmit="return false">
+					<p class="pl-cap">1 / open an account</p>
+					<div class="bc-seg" role="radiogroup" aria-label="Sex">
+						<button type="button" data-sex="m" class="on">male</button><button type="button" data-sex="f">female</button>
+					</div>
+					<label>age <output data-o="age"></output><input type="range" name="age" min="18" max="70" value="${st.age}"></label>
+					<label>height <output data-o="height"></output> cm<input type="range" name="height" min="145" max="200" value="${st.height}"></label>
+					<label>weight <output data-o="weight"></output> kg<input type="range" name="weight" min="45" max="140" value="${st.weight}"></label>
+					<div class="bc-seg" role="radiogroup" aria-label="Goal">
+						<button type="button" data-goal="maintain">maintain</button><button type="button" data-goal="lose025" class="on">−0.25 kg/wk</button><button type="button" data-goal="lose05">−0.5 kg/wk</button>
+					</div>
+					<dl class="bc-math">
+						<div><dt>bmr</dt><dd data-v="bmr">0</dd></div>
+						<div><dt>× 1.2 daily life</dt><dd data-v="tdee">0</dd></div>
+						<div><dt>− goal</dt><dd data-v="def">0</dd></div>
+					</dl>
+				</form>
+				<div class="bc-right">
+					<p class="pl-cap mono">2 / spend it</p>
+					<div class="bc-card">
+						<span class="mono bc-card-top">today's balance</span>
+						<span class="bc-bal"><b data-v="bal">0</b> <small>kcal</small></span>
+						<span class="mono bc-card-foot"><span>bankcal</span><span class="bc-state">in credit</span></span>
+					</div>
+					<div class="bc-chips mono">
+						${MEALS.map(([n, k]) => `<button data-meal="${n}" data-k="${k}">${n} <i>−${k}</i></button>`).join("")}
+						<button class="dep" data-meal="30 min walk" data-k="-150">30 min walk <i>+150</i></button>
+					</div>
+					<ol class="bc-receipt mono" aria-live="polite"></ol>
+					<div class="bc-foot mono">
+						<button data-act="close">close the day →</button>
+						<button data-act="reset">reset</button>
+					</div>
+					<p class="bc-statement mono" hidden></p>
+				</div>
+			</div>`;
+
+		const v = (k) => $(`[data-v="${k}"]`, root);
+		let lastBal = 0;
+		const budget = () => {
+			const bmr = 10 * st.weight + 6.25 * st.height - 5 * st.age + (st.sex === "m" ? 5 : -161);
+			const tdee = bmr * 1.2;
+			const auto = Math.max(FLOOR[st.sex], Math.round((tdee - GOALS[st.goal]) / 10) * 10);
+			return { bmr, tdee, def: GOALS[st.goal], auto };
+		};
+		function render() {
+			["age", "height", "weight"].forEach((k) => ($(`[data-o="${k}"]`, root).textContent = st[k]));
+			const b = budget();
+			v("bmr").textContent = fmt(b.bmr);
+			v("tdee").textContent = fmt(b.tdee);
+			v("def").textContent = fmt(b.def);
+			const spent = st.log.reduce((s, x) => s + x.k, 0);
+			const bal = b.auto - spent;
+			tween(v("bal"), lastBal, bal, 450);
+			lastBal = bal;
+			const card = $(".bc-card", root);
+			card.classList.toggle("is-over", bal < 0);
+			$(".bc-state", root).textContent = bal < 0 ? "overdrawn" : "in credit";
+			$(".bc-receipt", root).innerHTML = [`<li><span>opening budget</span><b>+${fmt(b.auto)}</b></li>`]
+				.concat(st.log.map((x) => `<li class="new"><span>${x.n}</span><b>${x.k > 0 ? "−" : "+"}${fmt(Math.abs(x.k))}</b></li>`)).join("");
+		}
+
+		$(".bc-form", root).addEventListener("input", (e) => { if (e.target.name) { st[e.target.name] = +e.target.value; render(); } });
+		root.addEventListener("click", (e) => {
+			const b = e.target.closest("button");
+			if (!b) return;
+			if (b.dataset.sex || b.dataset.goal) {
+				const key = b.dataset.sex ? "sex" : "goal";
+				st[key] = b.dataset[key];
+				$$("button", b.parentElement).forEach((x) => x.classList.toggle("on", x === b));
+			}
+			if (b.dataset.meal) { st.log.push({ n: b.dataset.meal, k: +b.dataset.k }); flash(b); $(".bc-statement", root).hidden = true; }
+			if (b.dataset.act === "reset") { st.log = []; $(".bc-statement", root).hidden = true; }
+			if (b.dataset.act === "close") {
+				const left = budget().auto - st.log.reduce((s, x) => s + x.k, 0);
+				const p = $(".bc-statement", root);
+				p.hidden = false;
+				p.innerHTML = left >= 0
+					? `statement: <b>saved ${fmt(left)} kcal</b> ≈ ${fmt(left / 7.7)} g of body fat. nice.`
+					: `statement: <b>overspent ${fmt(-left)} kcal</b>. tomorrow's a new balance.`;
+				flash(p);
+			}
+			render();
+		});
+		render();
+	};
+
+	/* =====================================================
+	   SCOREBOARD — one handler for every button
+	   ===================================================== */
+	demos.scoreboard = (root) => {
+		const score = { home: 0, away: 0 };
+		const plays = [];
+		root.innerHTML = `
+			<div class="sb">
+				${["home", "away"].map((t) => `
+				<div class="sb-team" data-team="${t}">
+					<span class="mono sb-name">${t}</span>
+					<output class="sb-score" data-score="${t}">0</output>
+					<div class="sb-btns mono">${[1, 2, 3].map((n) => `<button data-team="${t}" data-pts="${n}">+${n}</button>`).join("")}</div>
+				</div>`).join("")}
+			</div>
+			<div class="pl-actions mono">
+				<button data-act="undo">↶ undo</button>
+				<button data-act="new">new game</button>
+				<span class="sb-log pl-hint"></span>
+			</div>`;
+		function render() {
+			["home", "away"].forEach((t) => ($(`[data-score="${t}"]`, root).textContent = score[t]));
+			const lead = score.home === score.away ? null : score.home > score.away ? "home" : "away";
+			$$(".sb-team", root).forEach((el) => el.classList.toggle("is-lead", el.dataset.team === lead));
+			$(".sb-log", root).textContent = plays.slice(-4).map((p) => `${p.team} +${p.pts}`).join(" · ") || "tap a button to score";
+		}
+		root.addEventListener("click", (e) => {
+			const b = e.target.closest("button");
+			if (!b) return;
+			if (b.dataset.pts) {
+				score[b.dataset.team] += +b.dataset.pts;
+				plays.push({ team: b.dataset.team, pts: +b.dataset.pts });
+				flash($(`[data-score="${b.dataset.team}"]`, root));
+			}
+			if (b.dataset.act === "undo" && plays.length) { const p = plays.pop(); score[p.team] -= p.pts; }
+			if (b.dataset.act === "new") { score.home = score.away = 0; plays.length = 0; }
+			render();
+		});
+		render();
+	};
+
+	/* =====================================================
+	   PASSGEN — crypto randomness, length, options, copy
+	   ===================================================== */
+	demos.passgen = (root) => {
+		const SETS = { lower: "abcdefghijklmnopqrstuvwxyz", upper: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", num: "0123456789", sym: "~!@#$%^&*()_-+={[}]|:;<>.?/" };
+		const st = { len: 16, num: true, sym: true };
+		root.innerHTML = `
+			<div class="pg">
+				<button class="pg-out mono" data-i="0" data-cursor="copy" aria-label="Copy password"></button>
+				<button class="pg-out mono" data-i="1" data-cursor="copy" aria-label="Copy password"></button>
+				<div class="pg-meter"><span></span></div>
+				<p class="mono pg-bits"></p>
+			</div>
+			<div class="pg-ctrl mono">
+				<label>length <output>${st.len}</output><input type="range" min="8" max="32" value="${st.len}"></label>
+				<label class="tick"><input type="checkbox" data-opt="num" checked> numbers</label>
+				<label class="tick"><input type="checkbox" data-opt="sym" checked> symbols</label>
+				<button class="pg-go" data-act="go">generate</button>
+			</div>`;
+		const pool = () => SETS.lower + SETS.upper + (st.num ? SETS.num : "") + (st.sym ? SETS.sym : "");
+		function make() {
+			const p = pool(), buf = new Uint32Array(st.len);
+			crypto.getRandomValues(buf);
+			return [...buf].map((n) => p[n % p.length]).join("");
+		}
+		function generate() {
+			$$(".pg-out", root).forEach((el) => {
+				el.dataset.text = make();
+				el.textContent = el.dataset.text;
+				if (window.jaScramble) window.jaScramble(el, 420);
+			});
+			const bits = Math.round(st.len * Math.log2(pool().length));
+			const label = bits < 60 ? "weak" : bits < 80 ? "ok" : bits < 110 ? "strong" : "ridiculous";
+			$(".pg-meter span", root).style.width = Math.min(100, bits / 1.4) + "%";
+			$(".pg-bits", root).textContent = `${bits} bits of entropy — ${label}`;
+		}
+		root.addEventListener("input", (e) => {
+			if (e.target.type === "range") { st.len = +e.target.value; $("output", root).textContent = st.len; }
+			if (e.target.dataset.opt) st[e.target.dataset.opt] = e.target.checked;
+			generate();
+		});
+		root.addEventListener("click", async (e) => {
+			const b = e.target.closest("button");
+			if (!b) return;
+			if (b.dataset.act === "go") generate();
+			if (b.classList.contains("pg-out")) {
+				try { await navigator.clipboard.writeText(b.dataset.text); } catch (_) {}
+				b.classList.add("copied");
+				setTimeout(() => b.classList.remove("copied"), 900);
+			}
+		});
+		generate();
+	};
+
+	/* =====================================================
+	   COUNTER — count people through the door, log each batch
+	   ===================================================== */
+	demos.counter = (root) => {
+		let count = 0, log = [];
+		root.innerHTML = `
+			<div class="ct">
+				<button class="ct-num" data-act="inc" data-cursor="+1" aria-label="Add one">0</button>
+				<div class="ct-side mono">
+					<button data-act="inc">+1 <i>space</i></button>
+					<button data-act="save">save <i>enter</i></button>
+					<button data-act="reset">reset</button>
+					<p class="pl-cap">previous entries</p>
+					<p class="ct-log">—</p>
+					<p class="pl-cap">total through the door</p>
+					<p class="ct-total">0</p>
+				</div>
+			</div>`;
+		const num = $(".ct-num", root);
+		function act(a) {
+			if (a === "inc") { count++; flash(num); }
+			if (a === "save" && count) { log.push(count); count = 0; }
+			if (a === "reset") { count = 0; log = []; }
+			num.textContent = count;
+			$(".ct-log", root).textContent = log.length ? log.join(" — ") : "—";
+			$(".ct-total", root).textContent = log.reduce((s, n) => s + n, 0);
+		}
+		root.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) act(b.dataset.act); });
+		root.tabIndex = 0;
+		root.addEventListener("keydown", (e) => {
+			if (e.code === "Space") { e.preventDefault(); act("inc"); }
+			if (e.code === "Enter") { e.preventDefault(); act("save"); }
+		});
+	};
+
+	/* =====================================================
+	   HOMETOWN — scroll the original page with your pointer
+	   ===================================================== */
+	demos.scrollframe = (root) => {
+		const src = root.dataset.src;
+		root.innerHTML = `
+			<div class="sf">
+				<div class="sf-bar mono"><i></i><i></i><i></i><span>${root.dataset.url || ""}</span></div>
+				<div class="sf-view" data-cursor="scroll"><img src="${src}" alt="${root.dataset.alt || ""}"></div>
+			</div>
+			<p class="pl-hint mono">move your pointer up and down the page to scroll it</p>`;
+		const view = $(".sf-view", root), img = $("img", root);
+		let target = 0, y = 0, auto = !matchMedia("(hover: hover)").matches;
+		view.addEventListener("pointermove", (e) => {
+			const r = view.getBoundingClientRect();
+			target = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+		});
+		let t0 = performance.now();
+		(function loop(now) {
+			if (auto) target = (Math.sin((now - t0) / 2500) + 1) / 2;
+			const max = Math.max(0, img.offsetHeight - view.clientHeight);
+			y += (target * max - y) * 0.08;
+			img.style.transform = `translateY(${-y}px)`;
+			requestAnimationFrame(loop);
+		})(t0);
+	};
+
+	/* ---------- mount ---------- */
+	$$("[data-demo]").forEach((el) => {
+		const fn = demos[el.dataset.demo];
+		const body = $(".demo-body", el) || el;
+		if (fn) fn(body);
+	});
+})();

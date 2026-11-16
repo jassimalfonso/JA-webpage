@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Scoreboard — case study · JASSIM ALFONSO</title>
+	<meta name="description" content="Basketball scoreboard — a Scrimba solo project, rebuilt. Case study by Jassim Alfonso.">
+	<meta name="theme-color" content="#0d0d0c">
+	<link rel="icon" href="./assets/logo-no-name.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="case">
+	<div class="grain" aria-hidden="true"></div>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="mark" viewBox="0 0 99.21 94.7">
+			<polygon points="66.02 0 99.21 0 99.21 94.7 0 94.7 0 61.52 66.02 61.52 66.02 0"/>
+			<polygon points="57.01 0 0 28.51 57.01 57.01 57.01 0"/>
+		</symbol>
+	</svg>
+	<header class="nav">
+		<a href="./index.html" class="nav-brand" aria-label="Home"><svg><use href="#mark"/></svg></a>
+		<nav aria-label="Primary">
+			<ul class="nav-links mono">
+				<li><a href="./index.html#work">← /work</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<section class="hero hero--case">
+			<p class="mono case-kicker">case study / 2025 / scrimba solo project</p>
+			<h1 class="hero-title" style="--n:10"><span>Scoreboard</span></h1>
+			<span class="tape mono">six buttons → one function</span>
+			<div class="hero-foot">
+				<p class="hero-sub">A courtside scoreboard: home and away, +1, +2, +3, and a new-game reset. My first solo JavaScript project.</p>
+				<p class="case-links mono"><a href="https://ja-basketball-scoreboard.netlify.app/" target="_blank" rel="noopener">original ↗</a> <a href="https://github.com/jassimalfonso/scrim-basketball-scoreboard" target="_blank" rel="noopener">code ↗</a></p>
+			</div>
+		</section>
+		<dl class="facts mono">
+			<div><dt>course</dt><dd>scrimba</dd></div>
+			<div><dt>stack</dt><dd>html / css / js</dd></div>
+			<div><dt>lines of js</dt><dd><span data-count="47">47</span></dd></div>
+			<div><dt>rebuilt</dt><dd>nov 2026</dd></div>
+		</dl>
+
+		<section class="section">
+			<header class="section-head"><h2>Brief</h2><span class="mono">[01]</span></header>
+			<div class="case-body">
+				<p class="case-lead">Two teams. Six buttons. One number each.</p>
+				<div class="case-text">
+					<p>The brief was simple: a scoreboard you can run from the bench. Tap to add points, reset for the next game.</p>
+					<p>The first version worked — by writing the same five lines six times. This page is the rebuild.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Try it</h2><span class="mono">[02]</span></header>
+			<div class="demo" data-demo="scoreboard">
+				<div class="demo-head mono"><span class="live">live — scoreboard</span><span>try it ↓</span></div>
+				<div class="demo-body"></div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>How it works</h2><span class="mono">[03]</span></header>
+			<ol class="how">
+				<li><div><h3>Then: one listener per button</h3><p>Every button had its own copy of the same logic. Change one, forget the other five.</p><code class="code">homeAddOneButton.addEventListener(&quot;click&quot;, function() {
+    homeCount++;
+    homeScoreEl.textContent = homeCount;
+});
+// …and five more just like it</code></div></li>
+				<li><div><h3>Now: the button says what it does</h3><p>Each button carries its team and points in data attributes. One handler reads them.</p><code class="code">&lt;button data-team=&quot;home&quot; data-pts=&quot;3&quot;&gt;+3&lt;/button&gt;
+
+board.addEventListener(&quot;click&quot;, (e) =&gt; {
+  const b = e.target.closest(&quot;button&quot;);
+  score[b.dataset.team] += +b.dataset.pts;
+  render();
+});</code></div></li>
+				<li><div><h3>Extras that came free</h3><p>With every play in one place, undo is just popping the last play off a list — and the leading team lights up.</p></div></li>
+			</ol>
+		</section>
+
+		<section class="section about">
+			<header class="section-head"><h2>Now I'd</h2><span class="mono">[04]</span></header>
+			<div class="about-body">
+				<p class="about-lead">Small project. Same <em>lesson</em> as the big ones.</p>
+				<ul class="now">
+					<li><s>Copy-paste six times</s> one handler <span>data attributes describe the button, code reads them</span></li>
+					<li><s>Just a number</s> show who's winning <span>the leader inverts to white</span></li>
+					<li><s>No way back</s> undo <span>a list of plays makes mistakes cheap</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="section">
+			<a class="next" href="./passgen.html">
+				<span><span class="mono">next case →</span><br><span class="next-title">Passgen</span></span>
+				<span class="arrow">→</span>
+			</a>
+		</section>
+	</main>
+	<footer class="footer mono">
+		<span>© <span data-year></span> JA</span>
+		<span>hand-coded. no frameworks.</span>
+		<a href="#">top ↑</a>
+	</footer>
+	<script src="./js/site.js"></script>
+	<script src="./js/demos.js"></script>
+</body>
+</html>

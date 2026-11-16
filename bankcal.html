@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>BankCal — case study · JASSIM ALFONSO</title>
+	<meta name="description" content="BankCal — a calorie budget that works like a bank account. Case study by Jassim Alfonso.">
+	<meta name="theme-color" content="#0d0d0c">
+	<link rel="icon" href="./assets/logo-no-name.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="case">
+	<div class="grain" aria-hidden="true"></div>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="mark" viewBox="0 0 99.21 94.7">
+			<polygon points="66.02 0 99.21 0 99.21 94.7 0 94.7 0 61.52 66.02 61.52 66.02 0"/>
+			<polygon points="57.01 0 0 28.51 57.01 57.01 57.01 0"/>
+		</symbol>
+	</svg>
+	<header class="nav">
+		<a href="./index.html" class="nav-brand" aria-label="Home"><svg><use href="#mark"/></svg></a>
+		<nav aria-label="Primary">
+			<ul class="nav-links mono">
+				<li><a href="./index.html#work">← /work</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<section class="hero hero--case">
+			<p class="mono case-kicker">case study / 2026</p>
+			<h1 class="hero-title" style="--n:7"><span>BankCal</span></h1>
+			<span class="tape mono">your calories, as a bank account</span>
+			<div class="hero-foot">
+				<p class="hero-sub">A daily calorie budget that behaves like a bank account: a balance each morning, every meal a transaction, and a statement that says whether you saved or overspent.</p>
+				<p class="case-links mono"><a href="https://bankcal.vercel.app/" target="_blank" rel="noopener">open the app ↗</a> <a href="https://github.com/jassimalfonso/bankcal" target="_blank" rel="noopener">code ↗</a></p>
+			</div>
+		</section>
+		<dl class="facts mono">
+			<div><dt>stack</dt><dd>react 19 / vite / firebase</dd></div>
+			<div><dt>type</dt><dd>installable app, google sign-in</dd></div>
+			<div><dt>accounts</dt><dd>two people, one household</dd></div>
+			<div><dt>version</dt><dd>1.0.12</dd></div>
+		</dl>
+
+		<section class="section">
+			<header class="section-head"><h2>Problem</h2><span class="mono">[01]</span></header>
+			<div class="case-body">
+				<p class="case-lead">Counting calories is <s>boring</s> banking.</p>
+				<div class="case-text">
+					<p>Most trackers just pile up numbers until the end of the day. Nobody knows what 1,840 means in the abstract.</p>
+					<p>Everyone understands a balance, though. So the budget opens like a bank account each morning, every meal is a withdrawal, a workout is a deposit — and at night you get a statement.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Try it</h2><span class="mono">[02]</span></header>
+			<p class="mono snaps-note">the real budget maths from the app. open an account, then spend it.</p>
+			<div class="demo" data-demo="bankcal">
+				<div class="demo-head mono"><span class="live">live — budget + balance</span><span>try it ↓</span></div>
+				<div class="demo-body"></div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>How it works</h2><span class="mono">[03]</span></header>
+			<ol class="how">
+				<li><div><h3>Base burn</h3><p>Mifflin-St Jeor works out what your body burns at rest, from weight, height, age and sex.</p><code class="code">bmr = 10 × kg + 6.25 × cm − 5 × age + (male ? 5 : −161)</code></div></li>
+				<li><div><h3>Daily life, not guesses</h3><p>Everyone starts at ×1.2 — a normal day without exercise. Workouts are deposited only when you log them, so activity is never counted twice.</p></div></li>
+				<li><div><h3>A goal with a floor</h3><p>A gentle or steady goal takes 275 or 550 kcal off. The budget never goes below 1,500 (men) or 1,200 (women), whatever the maths says.</p><code class="code">budget = max(floor, round((bmr × 1.2 − goal) / 10) × 10)</code></div></li>
+				<li><div><h3>The statement</h3><p>What you saved turns into something you can feel: 7,700 kcal is about 1 kg of body weight.</p></div></li>
+			</ol>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Snaps</h2><span class="mono">[04]</span></header>
+			<div class="phones" data-cursor="drag">
+				<figure><img src="./assets/projects/bankcal-morning.webp" alt="BankCal morning screen showing today's balance as a card" loading="lazy"><figcaption class="mono">good morning</figcaption></figure>
+				<figure><img src="./assets/projects/bankcal-today.webp" alt="BankCal today screen with the remaining balance" loading="lazy"><figcaption class="mono">today</figcaption></figure>
+				<figure><img src="./assets/projects/bankcal-progress.webp" alt="BankCal progress screen with a weekly chart" loading="lazy"><figcaption class="mono">progress</figcaption></figure>
+				<figure><img src="./assets/projects/bankcal-train.webp" alt="BankCal train screen with workout plans" loading="lazy"><figcaption class="mono">train</figcaption></figure>
+			</div>
+			<p class="mono snaps-note">from the app's demo mode — made-up data. drag sideways.</p>
+		</section>
+
+		<section class="section about">
+			<header class="section-head"><h2>Learned</h2><span class="mono">[05]</span></header>
+			<div class="about-body">
+				<p class="about-lead">First app with <em>accounts</em>, a database, and people who notice when it breaks.</p>
+				<ul class="now">
+					<li>Offline first <span>it has to work on a phone with no signal, then sync</span></li>
+					<li>Security rules are part of the app <span>who can read whose data is decided in the database, not the page</span></li>
+					<li>Tone is a feature <span>a statement that says “well done” gets opened again tomorrow</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="section">
+			<a class="next" href="./scoreboard.html">
+				<span><span class="mono">next case →</span><br><span class="next-title">Scoreboard</span></span>
+				<span class="arrow">→</span>
+			</a>
+		</section>
+	</main>
+	<footer class="footer mono">
+		<span>© <span data-year></span> JA</span>
+		<span>hand-coded. no frameworks.</span>
+		<a href="#">top ↑</a>
+	</footer>
+	<script src="./js/site.js"></script>
+	<script src="./js/demos.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Counter — case study · JASSIM ALFONSO</title>
+	<meta name="description" content="People counter — a Scrimba project, rebuilt. Case study by Jassim Alfonso.">
+	<meta name="theme-color" content="#0d0d0c">
+	<link rel="icon" href="./assets/logo-no-name.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="case">
+	<div class="grain" aria-hidden="true"></div>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="mark" viewBox="0 0 99.21 94.7">
+			<polygon points="66.02 0 99.21 0 99.21 94.7 0 94.7 0 61.52 66.02 61.52 66.02 0"/>
+			<polygon points="57.01 0 0 28.51 57.01 57.01 57.01 0"/>
+		</symbol>
+	</svg>
+	<header class="nav">
+		<a href="./index.html" class="nav-brand" aria-label="Home"><svg><use href="#mark"/></svg></a>
+		<nav aria-label="Primary">
+			<ul class="nav-links mono">
+				<li><a href="./index.html#work">← /work</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<section class="hero hero--case">
+			<p class="mono case-kicker">case study / 2025 / scrimba</p>
+			<h1 class="hero-title" style="--n:7"><span>Counter</span></h1>
+			<span class="tape mono">tap. count. save.</span>
+			<div class="hero-foot">
+				<p class="hero-sub">Count people through a door, save the number, start again. The first thing I ever made a button do.</p>
+				<p class="case-links mono"><a href="https://ja-counter.netlify.app/" target="_blank" rel="noopener">original ↗</a> <a href="https://github.com/jassimalfonso/scrim-counter" target="_blank" rel="noopener">code ↗</a></p>
+			</div>
+		</section>
+		<dl class="facts mono">
+			<div><dt>course</dt><dd>scrimba</dd></div>
+			<div><dt>stack</dt><dd>html / css / js</dd></div>
+			<div><dt>lines of js</dt><dd><span data-count="15">15</span></dd></div>
+			<div><dt>rebuilt</dt><dd>nov 2026</dd></div>
+		</dl>
+
+		<section class="section">
+			<header class="section-head"><h2>Brief</h2><span class="mono">[01]</span></header>
+			<div class="case-body">
+				<p class="case-lead">Count. Save. <s>Forget.</s> Repeat.</p>
+				<div class="case-text">
+					<p>A counter for the person on the door: tap for each person, save the batch, and the list of entries builds up underneath.</p>
+					<p>Fifteen lines of JavaScript. Where variables, functions and the DOM first clicked.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Try it</h2><span class="mono">[02]</span></header>
+			<div class="demo" data-demo="counter">
+				<div class="demo-head mono"><span class="live">live — counter</span><span>try it ↓</span></div>
+				<div class="demo-body"></div>
+			</div>
+			<p class="mono snaps-note">click the demo, then use space to count and enter to save.</p>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>How it works</h2><span class="mono">[03]</span></header>
+			<ol class="how">
+				<li><div><h3>A number and a function</h3><p>Click runs increment(), which adds one and writes it on the page.</p><code class="code">function increment() {
+    count += 1
+    countEl.textContent = count
+}</code></div></li>
+				<li><div><h3>Save is a reset with a memory</h3><p>Save writes the count into the list of entries, then sets it back to zero.</p></div></li>
+				<li><div><h3>Rebuilt: keys and a total</h3><p>Space counts and Enter saves, so you can use it without looking. The entries add up to a total.</p></div></li>
+			</ol>
+		</section>
+
+		<section class="section about">
+			<header class="section-head"><h2>Now I'd</h2><span class="mono">[04]</span></header>
+			<div class="about-body">
+				<p class="about-lead">Make it usable <em>without looking</em>.</p>
+				<ul class="now">
+					<li><s>onclick in the HTML</s> listeners in the script</li>
+					<li><s>Mouse only</s> space to count, enter to save</li>
+					<li><s>A list</s> a running total <span>the number someone actually asks for</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="section">
+			<a class="next" href="./hometown.html">
+				<span><span class="mono">next case →</span><br><span class="next-title">Hometown</span></span>
+				<span class="arrow">→</span>
+			</a>
+		</section>
+	</main>
+	<footer class="footer mono">
+		<span>© <span data-year></span> JA</span>
+		<span>hand-coded. no frameworks.</span>
+		<a href="#">top ↑</a>
+	</footer>
+	<script src="./js/site.js"></script>
+	<script src="./js/demos.js"></script>
+</body>
+</html>

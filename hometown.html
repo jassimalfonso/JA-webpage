@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Hometown — case study · JASSIM ALFONSO</title>
+	<meta name="description" content="Hometown — a one-page site about Dubai. A Scrimba solo project. Case study by Jassim Alfonso.">
+	<meta name="theme-color" content="#0d0d0c">
+	<link rel="icon" href="./assets/logo-no-name.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="case">
+	<div class="grain" aria-hidden="true"></div>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="mark" viewBox="0 0 99.21 94.7">
+			<polygon points="66.02 0 99.21 0 99.21 94.7 0 94.7 0 61.52 66.02 61.52 66.02 0"/>
+			<polygon points="57.01 0 0 28.51 57.01 57.01 57.01 0"/>
+		</symbol>
+	</svg>
+	<header class="nav">
+		<a href="./index.html" class="nav-brand" aria-label="Home"><svg><use href="#mark"/></svg></a>
+		<nav aria-label="Primary">
+			<ul class="nav-links mono">
+				<li><a href="./index.html#work">← /work</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<section class="hero hero--case">
+			<p class="mono case-kicker">case study / 2025 / scrimba solo project</p>
+			<h1 class="hero-title" style="--n:8"><span>Hometown</span></h1>
+			<span class="tape mono">home away from home</span>
+			<div class="hero-foot">
+				<p class="hero-sub">A one-page site about Dubai — four places to go, laid out as cards. My first page that was about something, not just an exercise.</p>
+				<p class="case-links mono"><a href="https://ja-hometown-project.netlify.app/" target="_blank" rel="noopener">original ↗</a> <a href="https://github.com/jassimalfonso/scrim-hometown-project" target="_blank" rel="noopener">code ↗</a></p>
+			</div>
+		</section>
+		<dl class="facts mono">
+			<div><dt>course</dt><dd>scrimba</dd></div>
+			<div><dt>stack</dt><dd>html / css</dd></div>
+			<div><dt>places</dt><dd><span data-count="4">4</span></dd></div>
+			<div><dt>year</dt><dd>2025</dd></div>
+		</dl>
+
+		<section class="section">
+			<header class="section-head"><h2>Brief</h2><span class="mono">[01]</span></header>
+			<div class="case-body">
+				<p class="case-lead">Pick a place. Make a page about it.</p>
+				<div class="case-text">
+					<p>The brief: a single page about your hometown. I picked Dubai — the city that became home.</p>
+					<p>A header, an intro, four cards (Opera, Mall, Desert Safari, Miracle Garden) and a short profile at the bottom.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Look around</h2><span class="mono">[02]</span></header>
+			<div class="demo" data-demo="scrollframe">
+				<div class="demo-head mono"><span class="live">live — the original page</span><span>try it ↓</span></div>
+				<div class="demo-body" data-src="./assets/projects/hometown-full.webp" data-url="ja-hometown-project.netlify.app" data-alt="Full-length capture of the Hometown page about Dubai"></div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>How it works</h2><span class="mono">[03]</span></header>
+			<ol class="how">
+				<li><div><h3>Cards in a row</h3><p>Each place is a card: image, heading, a paragraph. Flexbox lines them up and wraps them on smaller screens.</p><code class="code">.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}</code></div></li>
+				<li><div><h3>Two typefaces</h3><p>A serif for the headline, a clean sans for reading — the first time I chose fonts on purpose.</p></div></li>
+			</ol>
+		</section>
+
+		<section class="section about">
+			<header class="section-head"><h2>Now I'd</h2><span class="mono">[04]</span></header>
+			<div class="about-body">
+				<p class="about-lead">Finish the <em>last ten percent</em>.</p>
+				<ul class="now">
+					<li><s>Lorem ipsum</s> my own words in the footer</li>
+					<li><s>Empty alt=""</s> describe every image <span>for screen readers, and for when images fail</span></li>
+					<li><s>Long search links</s> straight to the map</li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="section">
+			<a class="next" href="./ikonplan.html">
+				<span><span class="mono">next case →</span><br><span class="next-title">ikonplan</span></span>
+				<span class="arrow">→</span>
+			</a>
+		</section>
+	</main>
+	<footer class="footer mono">
+		<span>© <span data-year></span> JA</span>
+		<span>hand-coded. no frameworks.</span>
+		<a href="#">top ↑</a>
+	</footer>
+	<script src="./js/site.js"></script>
+	<script src="./js/demos.js"></script>
+</body>
+</html>

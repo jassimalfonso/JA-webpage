@@ -1,2 +1,31 @@
 # JA-webpage
-Personal Webpage
+
+Personal site of Jassim Alfonso — minimal / punk, ink and paper, hand-coded. No framework, no build step: open `index.html`.
+
+## What's where
+
+| Path | What it is |
+|---|---|
+| `index.html` | Home: hero, work list, about, contact |
+| `ikonplan.html`, `bankcal.html`, `scoreboard.html`, `passgen.html`, `counter.html`, `hometown.html` | One case study per project, each with a live demo |
+| `css/style.css` | All styles. Colours are the three tokens at the top: `--k` ink, `--w` paper, `--g` pencil |
+| `js/site.js` | Motion: page wipe, scramble headings, count-up numbers, scroll-speed ticker, cursor, hover previews |
+| `js/demos.js` | The interactive demos, one function per project (`data-demo="…"` on the page picks it) |
+| `assets/` | Logo, project screenshots (`ikonplan/` uses the tool's built-in sample plan only — no client data) |
+
+## Versions
+
+| Branch | What it is |
+|---|---|
+| `original` | The site exactly as it was before the 2026 revamp. Don't commit to it — treat it as a snapshot |
+| `v2-revamp` | Snapshot of the minimal / punk revamp with case studies and demos |
+| `main` | What's live |
+
+Optional, from your own PC — pin both snapshots as tags too:
+`git fetch && git tag v1-original origin/original && git tag v2.0.0 origin/v2-revamp && git push origin --tags`
+
+**Look at the original:** `git switch original` (then `git switch main` to come back).
+
+**Start your own version from the original:** `git switch -c my-build original`, then build and commit there. To put it live, merge it into `main` or point Netlify at that branch.
+
+**Put the original back live:** `git switch main`, then `git revert --no-edit original..main`, then `git push`. This adds a new commit that undoes the revamp, and keeps the revamp in history in case you want it back.

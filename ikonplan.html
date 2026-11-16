@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ikonplan — case study · JASSIM ALFONSO</title>
+	<meta name="description" content="ikonplan — a browser-based pre-sales design tool for AV and smart-home projects. Case study by Jassim Alfonso.">
+	<meta name="theme-color" content="#0d0d0c">
+	<link rel="icon" href="./assets/logo-no-name.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="case">
+	<div class="grain" aria-hidden="true"></div>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="mark" viewBox="0 0 99.21 94.7">
+			<polygon points="66.02 0 99.21 0 99.21 94.7 0 94.7 0 61.52 66.02 61.52 66.02 0"/>
+			<polygon points="57.01 0 0 28.51 57.01 57.01 57.01 0"/>
+		</symbol>
+	</svg>
+	<header class="nav">
+		<a href="./index.html" class="nav-brand" aria-label="Home"><svg><use href="#mark"/></svg></a>
+		<nav aria-label="Primary">
+			<ul class="nav-links mono">
+				<li><a href="./index.html#work">← /work</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<section class="hero hero--case">
+			<p class="mono case-kicker">case study / 2026</p>
+			<h1 class="hero-title" style="--n:8"><span>ikonplan</span></h1>
+			<span class="tape mono">built at work / used every day</span>
+			<div class="hero-foot">
+				<p class="hero-sub">A browser tool for designing AV and smart-home systems on a floor plan, and turning that design into the drawings, slides and spreadsheets a client receives.</p>
+				
+			</div>
+		</section>
+		<dl class="facts mono">
+			<div><dt>role</dt><dd>design + code, with Claude</dd></div>
+			<div><dt>stack</dt><dd>html / css / js — no framework, no server</dd></div>
+			<div><dt>first release</dt><dd>jul 2026</dd></div>
+			<div><dt>releases since</dt><dd><span data-count="895">895</span></dd></div>
+		</dl>
+
+		<section class="section">
+			<header class="section-head"><h2>Problem</h2><span class="mono">[01]</span></header>
+			<div class="case-body">
+				<p class="case-lead">Same information. Typed <s>once</s> four times.</p>
+				<div class="case-text">
+					<p>In pre-sales, a design lives in several places at once: devices marked up on the architect's floor plan, then counted and copied into an Excel field-device sheet, a priced bill of quantities and a slide deck for the client.</p>
+					<p>Every count was done by hand. Every new revision of the plan meant doing it again — and any number that drifted between the drawing and the spreadsheet was one the client would find first.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Try it</h2><span class="mono">[02]</span></header>
+			<p class="mono snaps-note">a tiny rebuild of the core idea: place devices on a plan, and the bill of quantities keeps up on its own.</p>
+			<div class="demo" data-demo="planner">
+				<div class="demo-head mono"><span class="live">live — mini planner</span><span>try it ↓</span></div>
+				<div class="demo-body"></div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Built</h2><span class="mono">[03]</span></header>
+			<ol class="build-list">
+				<li><span class="mono">a</span><h3>One plan, every output</h3><p>Place devices once. Layout sheets, slides, the Excel FD sheet, a priced BoQ and a CAD-ready DXF all come from the same plan, so the numbers always agree.</p></li>
+				<li><span class="mono">b</span><h3>Rooms in one tap</h3><p>Tap inside a room on a PDF and it finds the walls and reads the room's name from the drawing. Or find every room on a floor in one go.</p></li>
+				<li><span class="mono">c</span><h3>Revisions without redoing</h3><p>Drop in the architect's next revision: it lines up with the old one and moves every device, room and note across in one undoable step.</p></li>
+				<li><span class="mono">d</span><h3>Design standards</h3><p>Design a room once, save it as a recipe, and every room of that kind fills itself the same way.</p></li>
+				<li><span class="mono">e</span><h3>Tools around it</h3><p>Smaller tools grew beside it: bus power supply sizing for KNX, Dynalite, Lutron QS and Cresnet (replacing a spreadsheet), a Lutron QSX planner, a cinema acoustics configurator and a quote finaliser.</p></li>
+				<li><span class="mono">f</span><h3>Works anywhere</h3><p>No install, no login. It runs offline as an app on a laptop, tablet or phone — projects are just files you own.</p></li>
+			</ol>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Snaps</h2><span class="mono">[04]</span></header>
+			<p class="mono snaps-note">the real thing, shown with its built-in sample plan — no client data.</p>
+			<div class="snaps">
+				<figure class="snap snap--wide"><img src="./assets/ikonplan/plan.webp" alt="ikonplan with a sample villa floor plan, rooms coloured by type and devices placed" loading="lazy"><figcaption class="mono">01 / the plan — rooms, devices, live counts</figcaption></figure>
+				<figure class="snap"><img src="./assets/ikonplan/welcome.webp" alt="ikonplan start screen with the tools list" loading="lazy"><figcaption class="mono">02 / start screen + tools</figcaption></figure>
+				<figure class="snap"><img src="./assets/ikonplan/boq.webp" alt="Bill of quantities drawer with a room-by-room breakdown" loading="lazy"><figcaption class="mono">03 / boq, room by room</figcaption></figure>
+				<figure class="snap"><img src="./assets/ikonplan/power.webp" alt="Power calculator sizing KNX power supplies" loading="lazy"><figcaption class="mono">04 / power calculator</figcaption></figure>
+				<figure class="snap"><img src="./assets/ikonplan/acoustic.webp" alt="Acoustic configurator for a cinema room" loading="lazy"><figcaption class="mono">05 / acoustic configurator</figcaption></figure>
+			</div>
+		</section>
+
+		<section class="section about">
+			<header class="section-head"><h2>Learned</h2><span class="mono">[05]</span></header>
+			<div class="about-body">
+				<p class="about-lead">Shipping to real people every day is a <em>different</em> sport.</p>
+				<ul class="now">
+					<li>Changelog for the team <span>plain words — what you see and do, not how the code works</span></li>
+					<li>Test before every release <span>not after someone finds it</span></li>
+					<li>Exports must not move a pixel <span>the client sheets are compared against a known-good build</span></li>
+					<li>The best feature removes a step <span>if it adds a click, it had better save ten</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="section">
+			<a class="next" href="./bankcal.html">
+				<span><span class="mono">next case →</span><br><span class="next-title">BankCal</span></span>
+				<span class="arrow">→</span>
+			</a>
+		</section>
+	</main>
+	<footer class="footer mono">
+		<span>© <span data-year></span> JA</span>
+		<span>hand-coded. no frameworks.</span>
+		<a href="#">top ↑</a>
+	</footer>
+	<script src="./js/site.js"></script>
+	<script src="./js/demos.js"></script>
+</body>
+</html>
