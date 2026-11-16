@@ -159,24 +159,58 @@
 	if (canHover && !reduce) {
 		const cur = document.createElement("div");
 		cur.className = "cur";
-		cur.innerHTML = "<span></span>";
+		// crosshair + a small coordinate readout; over something clickable it becomes a target box with a label
+		cur.innerHTML = '<i class="ch-x"></i><i class="ch-y"></i><i class="ch-box"></i><b class="ch-read"></b>';
 		document.body.appendChild(cur);
 		document.body.classList.add("has-cur");
-		let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y;
+		const read = cur.querySelector(".ch-read");
+		const coords = $$("[data-coords]");
+		const pad = (n) => String(Math.max(0, Math.round(n))).padStart(4, "0");
+		let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y, label = "";
 		window.addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; }, { passive: true });
 		document.addEventListener("pointerover", (e) => {
 			const t = e.target.closest("a, button, input, label, [data-cursor], .ikon");
 			cur.classList.toggle("is-big", !!t);
-			cur.firstChild.textContent = t?.dataset.cursor || "";
+			label = t?.dataset.cursor || "";
 		});
 		document.addEventListener("pointerdown", () => cur.classList.add("is-down"));
 		document.addEventListener("pointerup", () => cur.classList.remove("is-down"));
 		(function loop() {
-			cx += (x - cx) * 0.25;
-			cy += (y - cy) * 0.25;
+			cx += (x - cx) * 0.3;
+			cy += (y - cy) * 0.3;
 			cur.style.transform = `translate3d(${cx}px,${cy}px,0)`;
+			const xy = `x ${pad(x)} · y ${pad(y + scrollY)}`;
+			read.textContent = label || xy;
+			coords.forEach((c) => (c.textContent = xy));
 			requestAnimationFrame(loop);
 		})();
+	}
+
+	/* ---------- hero figure: the mark as an assembly ---------- */
+	const xv = $(".xv");
+	if (xv) {
+		const read = $("[data-xv-read]", xv);
+		let t = 0, target = 0;
+		const GAP = 42; // drawing units the wedge travels
+		const ease = (k) => 1 - Math.pow(1 - k, 3);
+		function frame() {
+			t += (target - t) * (reduce ? 1 : 0.09);
+			if (Math.abs(target - t) < 0.002) t = target;
+			const e = ease(t);
+			xv.style.setProperty("--t", e.toFixed(4));
+			// solid only in the last few percent: the "click" when parts seat
+			xv.style.setProperty("--fill", Math.max(0, (e - 0.94) / 0.06).toFixed(3));
+			read.textContent = e > 0.995 ? "assembled ✓" : `gap ${(GAP * (1 - e)).toFixed(1)} mm`;
+			if (t !== target) requestAnimationFrame(frame);
+		}
+		const go = (v) => { target = v; requestAnimationFrame(frame); };
+		frame();
+		setTimeout(() => go(1), reduce ? 0 : 900); // assemble once the page settles
+		if (canHover) {
+			xv.addEventListener("pointerenter", () => go(0));
+			xv.addEventListener("pointerleave", () => go(1));
+		}
+		$(".xv-hit", xv).addEventListener("click", () => go(target > 0.5 ? 0 : 1));
 	}
 
 	/* ---------- homepage: xeroxed preview that trails the cursor ---------- */
