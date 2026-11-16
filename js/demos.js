@@ -481,6 +481,93 @@
 		render();
 	};
 
+	/* =====================================================
+	   THE AFORM SHOW — three locations, one sound
+	   Each clip is recorded somewhere different. Clean, then level.
+	   ===================================================== */
+	demos.rooms = (root) => {
+		const TARGET = -16; // LUFS — a common podcast loudness target
+		const CLIPS = [
+			{ name: "client office", issue: "echo", lufs: -23, noise: -50, echo: true },
+			{ name: "majlis", issue: "ac hum", lufs: -14, noise: -36, hum: true },
+			{ name: "site visit", issue: "wind + traffic", lufs: -19, noise: -30 },
+		];
+		const STEPS = [
+			{ id: "nr", label: "clean noise", hint: "hum, wind, traffic down — voice untouched" },
+			{ id: "eq", label: "tame the room", hint: "less echo, voices sit in the same space" },
+			{ id: "lv", label: "level to −16", hint: "every location as loud as the next" },
+		];
+		const on = { nr: false, eq: false, lv: false };
+		const N = 64;
+		let seed = 7;
+		const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+		// a speech pattern per clip: bursts of words with gaps
+		CLIPS.forEach((c) => {
+			c.bars = Array.from({ length: N }, (_, i) => {
+				const speech = Math.sin(i / 3.1 + c.lufs) + rnd() * 0.9 > 0.35;
+				return { speech, v: rnd(), tail: !speech && i > 0 };
+			});
+		});
+
+		root.innerHTML = `
+			<div class="rm-steps mono" role="group" aria-label="Processing">
+				${STEPS.map((s, i) => `<button type="button" data-step="${s.id}" aria-pressed="false"><b>${i + 1}</b>${s.label}</button>`).join("")}
+				<button type="button" data-step="reset" class="rm-reset">reset</button>
+			</div>
+			<div class="rm-rows">
+				${CLIPS.map((c, k) => `
+				<div class="rm-row" data-k="${k}">
+					<div class="rm-label mono"><b>${c.name}</b><span>${c.issue}</span></div>
+					<div class="rm-wave" aria-hidden="true">${c.bars.map(() => "<i></i>").join("")}</div>
+					<div class="rm-read mono"><span data-r="lufs"></span><span data-r="noise"></span></div>
+				</div>`).join("")}
+			</div>
+			<div class="rm-foot mono">
+				<span>loudness spread between locations <b data-v="spread"></b></span>
+				<span class="rm-verdict" data-v="verdict"></span>
+			</div>
+			<p class="pl-hint mono rm-hint">recorded wherever the guest is. press the steps in any order.</p>`;
+
+		const toH = (db) => Math.max(3, Math.min(100, ((db + 44) / 40) * 100)); // -44..-4 dB fills the bar
+		function render() {
+			const levels = [];
+			CLIPS.forEach((c, k) => {
+				const row = $(`.rm-row[data-k="${k}"]`, root);
+				const lufs = on.lv ? TARGET : c.lufs;
+				const noise = on.nr ? -62 : c.noise;
+				levels.push(lufs);
+				$$(".rm-wave i", row).forEach((bar, i) => {
+					const b = c.bars[i];
+					let db;
+					if (b.speech) db = lufs + 6 - b.v * 12;
+					else if (c.echo && !on.eq && c.bars[i - 1]?.speech) db = lufs - 4 - b.v * 6; // the room ringing after each word
+					else db = noise + (c.hum && !on.nr ? 6 * Math.sin(i * 2.1) : 0) + b.v * 4;
+					bar.style.height = toH(db) + "%";
+					bar.classList.toggle("n", !b.speech);
+				});
+				$('[data-r="lufs"]', row).textContent = `${lufs} lufs`;
+				$('[data-r="noise"]', row).textContent = `noise ${noise} db`;
+				row.classList.toggle("is-ok", on.nr && on.eq && on.lv);
+			});
+			const spread = Math.max(...levels) - Math.min(...levels);
+			$('[data-v="spread"]', root).textContent = spread + " db";
+			const done = on.nr && on.eq && on.lv;
+			$('[data-v="verdict"]', root).textContent = done ? "sounds like one show ✓" : spread > 1 ? "listener reaches for the volume" : "level, but still sounds like three rooms";
+			$(".rm-foot", root).classList.toggle("is-ok", done);
+			$$(".rm-steps [data-step]", root).forEach((b) => { if (on[b.dataset.step] !== undefined) b.setAttribute("aria-pressed", on[b.dataset.step]); });
+			const last = STEPS.filter((s) => on[s.id]).pop();
+			$(".rm-hint", root).textContent = last ? last.hint : "recorded wherever the guest is. press the steps in any order.";
+		}
+		$(".rm-steps", root).addEventListener("click", (e) => {
+			const b = e.target.closest("button");
+			if (!b) return;
+			if (b.dataset.step === "reset") Object.keys(on).forEach((k) => (on[k] = false));
+			else on[b.dataset.step] = !on[b.dataset.step];
+			render();
+		});
+		render();
+	};
+
 	/* ---------- mount ---------- */
 	$$("[data-demo]").forEach((el) => {
 		const fn = demos[el.dataset.demo];
