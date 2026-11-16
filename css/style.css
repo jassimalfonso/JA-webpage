@@ -944,6 +944,24 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: v
 	.xv figcaption [data-xv-read] { white-space: nowrap; }
 }
 
+/* work rows: a thumbnail reveals in place, anchored to its row */
+.row a { position: relative; overflow: hidden; }
+.row-thumb {
+	position: absolute; right: 3.5rem; top: 50%;
+	height: calc(100% - 1rem); aspect-ratio: 16 / 10; width: auto;
+	object-fit: cover; object-position: top;
+	transform: translateY(-50%);
+	filter: grayscale(1) contrast(1.15);
+	outline: 1px solid var(--k);
+	clip-path: inset(0 0 0 100%);
+	transition: clip-path 0.45s var(--snap);
+	pointer-events: none;
+}
+.row-tags { transition: opacity 0.2s; }
+.row a:hover .row-thumb, .row a:focus-visible .row-thumb { clip-path: inset(0 0 0 0); }
+.row a:hover .row-tags, .row a:focus-visible .row-tags { opacity: 0; }
+@media (max-width: 800px), (hover: none) { .row-thumb { display: none; } }
+
 /* 404 */
 .lost { min-height: 100svh; display: grid; place-content: center; text-align: center; padding: var(--pad); gap: 1.5rem; }
 .lost h1 { font-size: clamp(8rem, 40vw, 30rem); font-weight: 900; letter-spacing: -0.08em; line-height: 0.8; }

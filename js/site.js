@@ -203,41 +203,18 @@
 			read.textContent = e > 0.995 ? "assembled ✓" : `gap ${(GAP * (1 - e)).toFixed(1)} mm`;
 			if (t !== target) requestAnimationFrame(frame);
 		}
-		const go = (v) => { target = v; requestAnimationFrame(frame); };
+		const go = (v) => { const was = target; target = v; if (was === t || Math.abs(v - t) > 0.002) requestAnimationFrame(frame); };
 		frame();
-		setTimeout(() => go(1), reduce ? 0 : 900); // assemble once the page settles
-		if (canHover) {
-			xv.addEventListener("pointerenter", () => go(0));
-			xv.addEventListener("pointerleave", () => go(1));
-		}
-		$(".xv-hit", xv).addEventListener("click", () => go(target > 0.5 ? 0 : 1));
+		// assemble once on load; after that, scrolling away from the hero takes it apart, coming back puts it together
+		let ready = false;
+		setTimeout(() => { ready = true; go(scrollPart()); }, reduce ? 0 : 900);
+		const hero = xv.closest(".hero");
+		const scrollPart = () => 1 - Math.min(1, Math.max(0, scrollY / (hero.offsetHeight * 0.55)));
+		window.addEventListener("scroll", () => { if (ready) go(scrollPart()); }, { passive: true });
+		// click / tap: replay the assembly
+		$(".xv-hit", xv).addEventListener("click", () => { go(0); setTimeout(() => go(scrollPart()), 750); });
 	}
 
-	/* ---------- homepage: xeroxed preview that trails the cursor ---------- */
-	const preview = $(".preview");
-	if (preview && canHover) {
-		const img = $("img", preview);
-		let x = 0, y = 0, px = 0, py = 0;
-		window.addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; }, { passive: true });
-		(function follow() {
-			px += (x - px) * 0.16;
-			py += (y - py) * 0.16;
-			preview.style.left = `${px + (px > innerWidth * 0.6 ? -280 : 190)}px`; // flip to the left near the right edge
-			preview.style.top = `${py}px`;
-			requestAnimationFrame(follow);
-		})();
-		$$(".row, .hero-index li").forEach((row) => {
-			row.addEventListener("pointerenter", () => {
-				const src = row.dataset.img;
-				preview.classList.toggle("is-text", !src);
-				const t = $(".row-title", row);
-				preview.dataset.label = (row.dataset.label || (t && (t.dataset.text || t.textContent)) || "") + ".";
-				if (src) img.src = src;
-				preview.classList.add("is-on");
-			});
-			row.addEventListener("pointerleave", () => preview.classList.remove("is-on"));
-		});
-	}
 })();
 
 /* =========================================================
