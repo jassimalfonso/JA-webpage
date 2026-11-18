@@ -854,19 +854,27 @@
 		fit();
 	};
 
-	/* ---------- third-party players: load only when scrolled near ---------- */
-	$$("[data-embed]").forEach((box) => {
-		new IntersectionObserver((ents, io) => {
-			if (!ents.some((e) => e.isIntersecting)) return;
-			io.disconnect();
+	/* ---------- YouTube: a poster until pressed, then the real player ----------
+	   Nothing loads from YouTube until a visitor asks for it (privacy-enhanced domain). */
+	$$("[data-yt]").forEach((box) => {
+		const id = (box.dataset.yt || "").trim();
+		if (!id) return; // no video chosen yet: the card links to the channel
+		const card = $(".yt-card", box);
+		card.removeAttribute("target");
+		card.href = `https://www.youtube.com/watch?v=${id}`;
+		card.style.backgroundImage = `url(https://i.ytimg.com/vi/${id}/hqdefault.jpg)`;
+		card.classList.add("has-poster");
+		$(".mono", card).textContent = "play here ▶ · or open on youtube ↗";
+		card.addEventListener("click", (e) => {
+			if (e.metaKey || e.ctrlKey) return; // let people open it on YouTube instead
+			e.preventDefault();
 			const f = document.createElement("iframe");
-			f.src = box.dataset.embed;
-			f.title = "The aForm Show on Spotify";
-			f.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
-			f.loading = "lazy";
-			f.addEventListener("load", () => $(".listen-load", box)?.remove());
-			box.appendChild(f);
-		}, { rootMargin: "400px" }).observe(box);
+			f.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+			f.title = "The aForm Show on YouTube";
+			f.allow = "autoplay; encrypted-media; fullscreen; picture-in-picture";
+			f.allowFullscreen = true;
+			box.replaceChildren(f);
+		});
 	});
 
 	/* ---------- mount ---------- */

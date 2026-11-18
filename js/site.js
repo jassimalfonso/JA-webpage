@@ -166,24 +166,26 @@
 		const read = cur.querySelector(".ch-read");
 		const coords = $$("[data-coords]");
 		const pad = (n) => String(Math.max(0, Math.round(n))).padStart(4, "0");
-		let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y, label = "";
-		window.addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; }, { passive: true });
+		let x = -100, y = -100, queued = false;
+		// locked 1:1 to the mouse — no easing, no trail. Drawn once per frame at most.
+		const draw = () => {
+			queued = false;
+			cur.style.transform = `translate3d(${x}px,${y}px,0)`;
+			const xy = `x ${pad(x)} · y ${pad(y + scrollY)}`;
+			coords.forEach((c) => (c.textContent = xy)); // the numbers live in the masthead, not on the pointer
+		};
+		window.addEventListener("pointermove", (e) => {
+			x = e.clientX; y = e.clientY;
+			if (!queued) { queued = true; requestAnimationFrame(draw); }
+		}, { passive: true });
 		document.addEventListener("pointerover", (e) => {
 			const t = e.target.closest("a, button, input, label, [data-cursor], .ikon");
 			cur.classList.toggle("is-big", !!t);
-			label = t?.dataset.cursor || "";
+			read.textContent = t?.dataset.cursor || ""; // a word only when it helps: open, listen, copy…
 		});
 		document.addEventListener("pointerdown", () => cur.classList.add("is-down"));
 		document.addEventListener("pointerup", () => cur.classList.remove("is-down"));
-		(function loop() {
-			cx += (x - cx) * 0.3;
-			cy += (y - cy) * 0.3;
-			cur.style.transform = `translate3d(${cx}px,${cy}px,0)`;
-			const xy = `x ${pad(x)} · y ${pad(y + scrollY)}`;
-			read.textContent = label || xy;
-			coords.forEach((c) => (c.textContent = xy));
-			requestAnimationFrame(loop);
-		})();
+		document.addEventListener("pointerleave", () => { x = -100; y = -100; draw(); });
 	}
 
 	/* ---------- hero figure: the mark as an assembly ---------- */
