@@ -290,8 +290,16 @@ img { display: block; max-width: 100%; }
    ========================================================= */
 .hero--case { min-height: 80svh; }
 .case-kicker { color: var(--g); margin-bottom: 1rem; }
-.hero--case .hero-title { font-size: min(20rem, calc((100vw - 2 * var(--pad)) / (var(--n, 8) * 0.6))); text-transform: lowercase; white-space: nowrap; }
-.hero--case .tape { top: 30%; }
+/* sized to fit the width (by letter count) AND the height left on short screens */
+.hero--case .hero-title {
+	font-size: max(3rem, min(20rem, calc((100vw - 2 * var(--pad)) / (var(--n, 8) * 0.6)), calc((100svh - 22rem) / 0.85)));
+	text-transform: lowercase; white-space: nowrap;
+	order: 2;
+}
+/* the sticker sits in the flow under the label, never on the title */
+.hero--case .case-kicker { order: 0; }
+.hero--case .tape { position: relative; top: auto; right: auto; order: 1; align-self: flex-start; margin: 0 0 1.75rem 0.25rem; }
+.hero--case .hero-foot { order: 3; }
 
 .facts {
 	display: grid; grid-template-columns: repeat(4, 1fr);
@@ -889,8 +897,7 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: v
    HERO FIGURE: the JA mark as an exploded-view drawing
    ========================================================= */
 .xv {
-	position: absolute; top: 8.5rem; right: var(--pad);
-	width: min(30rem, 34vw);
+	position: relative;
 	margin: 0; z-index: 2;
 	--t: 0; /* 0 = exploded, 1 = assembled (set by js) */
 }
@@ -917,7 +924,8 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: v
 	margin-top: 1.25rem; padding-top: 0.5rem; border-top: 1px solid var(--hair, rgba(128,128,128,.3));
 	color: var(--g); font-size: 0.68rem;
 }
-.xv figcaption [data-xv-read] { color: var(--w); font-variant-numeric: tabular-nums; }
+.xv figcaption [data-xv-read] { color: var(--w); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.xv figcaption span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .xv-parts { display: flex; gap: 1.5rem; margin-top: 0.4rem; font-size: 0.68rem; color: var(--g); opacity: calc(1 - var(--fill, 0)); }
 .xv-parts div { display: flex; gap: 0.5rem; align-items: center; }
 .xv-parts dt {
@@ -925,12 +933,31 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: v
 	border: 1px solid var(--w); border-radius: 50%; color: var(--w); font-size: 0.6rem; font-weight: 700;
 }
 
-/* name and figure share the sheet: name left, drawing right */
+/* name and figure share the sheet as a grid, so they can never collide.
+   Both are sized by the screen's width AND height: short laptop screens
+   (or 125 % scaling) shrink them instead of pushing them into each other. */
 @media (min-width: 801px) {
-	.hero--home .hero-title { font-size: clamp(3.8rem, 12.4vw, 16rem); max-width: 60%; }
-	.xv { top: 50%; transform: translateY(-58%); width: min(32rem, 33vw); }
+	.hero--home {
+		--room: calc(100svh - 20rem);            /* height left after nav, masthead and the foot */
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		grid-template-rows: 1fr auto auto;
+		column-gap: clamp(1.5rem, 4vw, 4rem);
+		align-items: end;
+		padding-top: 8.25rem;
+	}
+	.hero--home .hero-title {
+		grid-column: 1; grid-row: 1;
+		font-size: max(3.5rem, min(12vw, calc(var(--room) / 1.75), 16rem));
+		align-self: end;
+	}
+	.hero--home .xv {
+		grid-column: 2; grid-row: 1;
+		width: max(12rem, min(30rem, 30vw, calc(var(--room) * 0.95)));
+		align-self: center;
+	}
+	.hero--home .hero-foot { grid-column: 1 / -1; grid-row: 2; }
 }
-@media (max-width: 1000px) { .xv { width: min(22rem, 34vw); } }
 @media (max-width: 800px) {
 	.hero--home { min-height: auto; padding-top: 8rem; padding-bottom: 3rem; justify-content: flex-start; }
 	.hero--home .hero-title { order: 2; }
