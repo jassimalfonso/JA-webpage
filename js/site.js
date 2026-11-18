@@ -234,6 +234,8 @@
 	const meta = $('meta[name="theme-color"]');
 	function setTheme(t, save) {
 		if (t === "paper") root.dataset.theme = "paper"; else delete root.dataset.theme;
+		// the phone's status bar follows the look too
+		const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = t === "paper" ? "#ecebe6" : "#0d0d0c";
 		if (meta) meta.content = t === "paper" ? "#ecebe6" : "#0d0d0c";
 		$$("[data-theme-toggle]").forEach((b) => {
 			b.textContent = t === "paper" ? "/ink" : "/paper";
