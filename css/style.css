@@ -1256,3 +1256,10 @@ body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
 }
 .about-strip img { border-color: currentColor; }
 .about-strip figcaption { color: inherit; background: none; border: 0; padding: 0; }
+/* aForm edit: the real reel */
+.af-reel--video::before { display: none; }
+.af-reel--video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+.af-reel--video .af-reel-top { z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,0.8); color: #fff; }
+.af-reel--video .af-bar { z-index: 1; }
+.af-text .is-now { display: inline; background: var(--w); color: var(--k); text-decoration: none; padding: 0 0.1em; }
+.af-text .cut.is-now, .af-text .hurt.is-now { background: none; color: var(--g); }
