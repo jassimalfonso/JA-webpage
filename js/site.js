@@ -99,6 +99,8 @@
 			if (node.nodeType !== 3) return;
 			const frag = document.createDocumentFragment();
 			[...node.textContent].forEach((ch) => {
+				// a space inside an inline-block span collapses to nothing: keep spaces as plain text
+				if (ch === " ") { frag.appendChild(document.createTextNode(" ")); return; }
 				const s = document.createElement("span");
 				s.className = "ch";
 				s.textContent = ch;
@@ -274,25 +276,48 @@
 		});
 	}
 
-	/* ---------- section index on case pages ---------- */
+	/* ---------- the cases, in order (also feeds the index menu) ---------- */
+	const CASES = [
+		["ikonplan", "ikonplan"], ["quietpanel", "quiet panel"], ["bankcal", "bankcal"], ["aform", "aform show"],
+		["scoreboard", "scoreboard"], ["passgen", "passgen"], ["counter", "counter"], ["hometown", "hometown"],
+	];
+	const SECTIONS = []; // this page's sections, for the case bar and the index
+
+	/* ---------- case bar: previous · where you are · next ---------- */
 	if (document.body.classList.contains("case")) {
-		const secs = $$("main .section").filter((s) => $(".section-head h2", s));
-		if (secs.length > 2) {
-			const nav = document.createElement("nav");
-			nav.className = "toc";
-			nav.setAttribute("aria-label", "On this page");
-			secs.forEach((s) => {
-				const h = $(".section-head h2", s);
-				const name = (h.dataset.text || h.textContent).trim();
-				s.id = s.id || name.toLowerCase().replace(/[^a-z]+/g, "-").replace(/^-|-$/g, "");
-				nav.insertAdjacentHTML("beforeend", `<a href="#${s.id}">${name}</a>`);
-			});
-			document.body.appendChild(nav);
-			const links = $$("a", nav);
+		const here = location.pathname.split("/").pop().replace(".html", "");
+		const i = CASES.findIndex(([s]) => s === here);
+		$$("main .section").forEach((s) => {
+			const h = $(".section-head h2", s);
+			if (!h) return;
+			const name = (h.dataset.text || h.textContent).trim();
+			s.id = s.id || name.toLowerCase().replace(/[^a-z]+/g, "-").replace(/^-|-$/g, "");
+			SECTIONS.push([name, s]);
+		});
+		if (i >= 0) {
+			const [ps, pn] = CASES[(i - 1 + CASES.length) % CASES.length], [ns, nn] = CASES[(i + 1) % CASES.length];
+			const bar = document.createElement("nav");
+			bar.className = "casebar mono";
+			bar.setAttribute("aria-label", "Case studies");
+			bar.innerHTML = `
+				<a class="cb-side" href="./${ps}.html" rel="prev"><span aria-hidden="true">←</span><span class="cb-name">${pn}</span></a>
+				<button type="button" class="cb-mid" data-palette aria-haspopup="dialog" aria-label="Open the index: sections and all cases">
+					<span class="cb-count">${String(i + 1).padStart(2, "0")} / ${String(CASES.length).padStart(2, "0")}</span>
+					<span class="cb-sec">§ <b>${SECTIONS[0] ? SECTIONS[0][0].toLowerCase() : ""}</b></span>
+				</button>
+				<a class="cb-side cb-next" href="./${ns}.html" rel="next"><span class="cb-name">${nn}</span><span aria-hidden="true">→</span></a>`;
+			document.body.appendChild(bar);
+			const sec = $(".cb-sec b", bar);
 			const io2 = new IntersectionObserver((ents) => ents.forEach((en) => {
-				if (en.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.hash === "#" + en.target.id));
+				if (en.isIntersecting) { const f = SECTIONS.find(([, s]) => s === en.target); if (f) sec.textContent = f[0].toLowerCase(); }
 			}), { rootMargin: "-40% 0px -55% 0px" });
-			secs.forEach((s) => io2.observe(s));
+			SECTIONS.forEach(([, s]) => io2.observe(s));
+			// show it once you're past the intro; step aside for the footer
+			const hero = $(".hero"), foot = $(".footer");
+			let pastHero = false, atFoot = false;
+			const sync = () => bar.classList.toggle("is-on", pastHero && !atFoot);
+			new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); }, { rootMargin: "-30% 0px 0px 0px" }).observe(hero);
+			new IntersectionObserver(([e]) => { atFoot = e.isIntersecting; sync(); }).observe(foot);
 		}
 	}
 
@@ -312,19 +337,23 @@
 		["scoreboard", "./scoreboard.html"], ["passgen", "./passgen.html"], ["counter", "./counter.html"], ["hometown", "./hometown.html"],
 	];
 	const ACTIONS = [
+		["contact — say hi", () => (location.href = "./index.html#contact"), "page"],
 		["invert colours", toggleTheme, "theme"],
 		["linkedin", "https://www.linkedin.com/in/jassimalfonso/", "↗"],
 		["github", "https://github.com/jassimalfonso", "↗"],
 		["the aform show — listen", "https://linktr.ee/aformshow", "↗"],
 		["back to top", () => scrollTo({ top: 0, behavior: "smooth" }), "action"],
 	];
-	const items = PAGES.map(([n, u]) => ({ n, u, tag: "page" }))
+	// this page's sections first (jump within the page), then every page, then actions
+	const here = "./" + (location.pathname.split("/").pop() || "index.html");
+	const items = SECTIONS.map(([n, s]) => ({ n: "§ " + n.toLowerCase(), fn: () => s.scrollIntoView({ behavior: "smooth" }), tag: "this page" }))
+		.concat(PAGES.map(([n, u]) => ({ n, u, tag: u === here ? "you're here" : "page" })))
 		.concat(ACTIONS.map(([n, a, tag]) => (typeof a === "string" ? { n, u: a, tag, ext: true } : { n, fn: a, tag })));
 	const pal = document.createElement("div");
 	pal.className = "pal";
 	pal.hidden = true;
-	pal.innerHTML = `<div class="pal-box" role="dialog" aria-modal="true" aria-label="Go to">
-		<input type="text" placeholder="go to…" aria-label="Search pages and actions" autocomplete="off" spellcheck="false">
+	pal.innerHTML = `<div class="pal-box" role="dialog" aria-modal="true" aria-label="Index">
+		<div class="pal-head"><input type="text" placeholder="index — type to filter…" aria-label="Filter pages, sections and actions" autocomplete="off" spellcheck="false"><button type="button" class="pal-x" aria-label="Close the index">✕</button></div>
 		<ul class="pal-list" role="listbox"></ul>
 		<p class="pal-foot">↑ ↓ to move · enter to open · esc to close</p></div>`;
 	document.body.appendChild(pal);
@@ -344,11 +373,17 @@
 			if (b && shown[k]) b.addEventListener("click", () => { close(); shown[k].fn(); });
 		});
 	}
-	function open() { lastFocus = document.activeElement; pal.hidden = false; input.value = ""; sel = 0; draw(); input.focus(); }
-	function close() { pal.hidden = true; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+	const touch = matchMedia("(pointer: coarse)").matches;
+	function open() {
+		lastFocus = document.activeElement; pal.hidden = false; input.value = ""; sel = 0; draw();
+		document.body.style.overflow = "hidden";
+		// on a phone, don't pop the keyboard over the list — focus the list; typing is still one tap away
+		if (touch) $(".pal-x", pal).focus(); else input.focus();
+	}
+	function close() { pal.hidden = true; document.body.style.overflow = ""; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
 	window.jaPalette = open;
 	$$("[data-palette]").forEach((b) => b.addEventListener("click", open));
-	pal.addEventListener("click", (e) => { if (e.target === pal) close(); });
+	pal.addEventListener("click", (e) => { if (e.target === pal || e.target.closest(".pal-x")) close(); });
 	input.addEventListener("input", () => { sel = 0; draw(); });
 	pal.addEventListener("keydown", (e) => {
 		if (e.key === "Escape") { e.preventDefault(); close(); }
