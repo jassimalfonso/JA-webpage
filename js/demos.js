@@ -568,6 +568,70 @@
 		render();
 	};
 
+	/* =====================================================
+	   QUIET PANEL — the real CH5 panel, live in a frame
+	   Rendered at the panel's own size, then scaled to fit, so it looks
+	   exactly as it would on the wall / iPad / phone.
+	   ===================================================== */
+	demos.panel = (root) => {
+		const SRC = "./assets/quiet-panel/demo.html";
+		const SIZES = {
+			Landscape: { w: 1280, h: 800, label: "wall panel" },
+			Portrait: { w: 820, h: 1180, label: "ipad" },
+			Phone: { w: 390, h: 844, label: "phone" },
+		};
+		let layout = innerWidth < 700 ? "Phone" : "Landscape", tour = false, theme = ""; // phones open in the phone layout
+		root.innerHTML = `
+			<div class="qp-bar mono">
+				<div class="qp-seg" role="group" aria-label="Screen">
+					${Object.entries(SIZES).map(([k, s]) => `<button type="button" data-layout="${k}" aria-pressed="${k === layout}">${s.label}</button>`).join("")}
+				</div>
+				<div class="qp-seg" role="group" aria-label="Theme">
+					${["", "Washi", "Stone", "Aizome"].map((t) => `<button type="button" data-theme="${t}" aria-pressed="${t === theme}">${t ? t.toLowerCase() : "default"}</button>`).join("")}
+				</div>
+				<button type="button" class="qp-tour" data-tour aria-pressed="false">▶ guided tour</button>
+			</div>
+			<div class="qp-stage"><div class="qp-device"><iframe title="Quiet Panel — live Crestron CH5 demo" loading="lazy"></iframe></div></div>
+			<p class="pl-hint mono qp-hint">tap anything. drag the floor plan to orbit, scroll or pinch to zoom.</p>`;
+		const stage = $(".qp-stage", root), dev = $(".qp-device", root), frame = $("iframe", root);
+		function url() {
+			const q = new URLSearchParams();
+			q.set("layout", layout);
+			if (theme) q.set("theme", theme);
+			if (tour) q.set("demo", "1");
+			return `${SRC}?${q}`;
+		}
+		function fit() {
+			const s = SIZES[layout];
+			const maxW = stage.clientWidth, maxH = Math.min(innerHeight * 0.78, 760);
+			const k = Math.min(maxW / s.w, maxH / s.h, 1);
+			frame.style.width = s.w + "px";
+			frame.style.height = s.h + "px";
+			frame.style.transform = `scale(${k})`;
+			dev.style.width = s.w * k + "px";
+			dev.style.height = s.h * k + "px";
+		}
+		function load() { frame.src = url(); fit(); }
+		root.addEventListener("click", (e) => {
+			const b = e.target.closest("button");
+			if (!b) return;
+			if (b.dataset.layout) layout = b.dataset.layout;
+			if (b.dataset.theme !== undefined) theme = b.dataset.theme;
+			if (b.hasAttribute("data-tour")) tour = !tour;
+			$$("[data-layout]", root).forEach((x) => x.setAttribute("aria-pressed", x.dataset.layout === layout));
+			$$("[data-theme]", root).forEach((x) => x.setAttribute("aria-pressed", x.dataset.theme === theme));
+			$("[data-tour]", root).setAttribute("aria-pressed", tour);
+			$("[data-tour]", root).textContent = tour ? "■ stop tour" : "▶ guided tour";
+			load();
+		});
+		new ResizeObserver(fit).observe(stage);
+		// only load the panel when it scrolls into view
+		new IntersectionObserver((ents, io) => {
+			if (ents.some((e) => e.isIntersecting)) { load(); io.disconnect(); }
+		}, { rootMargin: "300px" }).observe(stage);
+		fit();
+	};
+
 	/* ---------- mount ---------- */
 	$$("[data-demo]").forEach((el) => {
 		const fn = demos[el.dataset.demo];

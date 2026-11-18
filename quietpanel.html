@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quiet Panel — case study · JASSIM ALFONSO</title>
+	<meta name="description" content="Quiet Panel — a standalone Crestron CH5 touch-panel interface for a residence, with a live 3D floor plan. Case study by Jassim Alfonso.">
+	<meta name="theme-color" content="#0d0d0c">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Quiet Panel — case study · JASSIM ALFONSO">
+	<meta property="og:description" content="Quiet Panel — a standalone Crestron CH5 touch-panel interface for a residence, with a live 3D floor plan. Case study by Jassim Alfonso.">
+	<meta property="og:image" content="https://jassimalfonso.netlify.app/assets/og/quietpanel.png">
+	<meta property="og:url" content="https://jassimalfonso.netlify.app/quietpanel.html">
+	<meta name="twitter:card" content="summary_large_image">
+	<link rel="icon" href="./assets/logo-no-name.svg">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="./css/style.css">
+	<script>try{var t=localStorage.getItem("ja-theme")||(matchMedia("(prefers-color-scheme: light)").matches?"paper":"ink");if(t==="paper")document.documentElement.dataset.theme="paper"}catch(e){}</script>
+</head>
+<body class="case" data-prev="ikonplan" data-next="bankcal">
+	<a class="skip" href="#main">skip to content</a>
+	<div class="grain" aria-hidden="true"></div>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="mark" viewBox="0 0 99.21 94.7">
+			<polygon points="66.02 0 99.21 0 99.21 94.7 0 94.7 0 61.52 66.02 61.52 66.02 0"/>
+			<polygon points="57.01 0 0 28.51 57.01 57.01 57.01 0"/>
+		</symbol>
+	</svg>
+	<header class="nav">
+		<a href="./index.html" class="nav-brand" aria-label="Home"><svg><use href="#mark"/></svg></a>
+		<nav aria-label="Primary">
+			<ul class="nav-links mono">
+				<li><a href="./index.html#work">← /work</a></li>
+				<li class="hide-sm"><button type="button" data-palette aria-label="Open the go-to menu">⌘k</button></li>
+				<li><button type="button" data-theme-toggle>/paper</button></li>
+			</ul>
+		</nav>
+	</header>
+	<main id="main">
+		<section class="hero hero--case">
+			<p class="mono case-kicker">challenge 02 / 2026 / crestron ch5</p>
+			<h1 class="hero-title" style="--n:11"><span>Quiet Panel</span></h1>
+			<span class="tape mono">runs with no processor</span>
+			<div class="hero-foot">
+				<p class="hero-sub">A complete Crestron CH5 touch-panel interface for a residence — lights, drapes, climate, media and a live 3D floor plan — that runs on its own, so a client can hold it before anything is installed.</p>
+				<p class="case-links mono"><a href="./assets/quiet-panel/demo.html" target="_blank" rel="noopener">open the panel ↗</a> <a href="https://github.com/jassimalfonso/quiet-panel-ch5" target="_blank" rel="noopener">code ↗</a></p>
+			</div>
+		</section>
+		<dl class="facts mono">
+			<div><dt>platform</dt><dd>crestron ch5</dd></div>
+			<div><dt>stack</dt><dd>html / css / js + preact</dd></div>
+			<div><dt>layouts</dt><dd>wall · tablet · phone</dd></div>
+			<div><dt>builds</dt><dd>v1.0 → v2.5</dd></div>
+		</dl>
+
+		<section class="section">
+			<header class="section-head"><h2>Challenge</h2><span class="mono">[01]</span></header>
+			<div class="case-body">
+				<p class="case-lead">Clients sign off on a panel they've <s>seen</s> never touched.</p>
+				<div class="case-text">
+					<p>A touch panel is the part of a smart home people use every day — but it's usually approved from a PDF of screens. A PDF can't show how a scene fades in, how drapes travel or how it feels under a finger.</p>
+					<p>Showing the real thing meant a processor, a program and a panel on a bench. And panels drawn the old way, in VT Pro-e, look their age. So: build a panel that shows what CH5 can do, and runs anywhere — wall panel, iPad, phone or a laptop on a TV.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Try it</h2><span class="mono">[02]</span></header>
+			<p class="mono snaps-note">the actual panel, running in your browser. switch the screen, or let it give you the tour.</p>
+			<div class="demo" data-demo="panel">
+				<div class="demo-head mono"><span class="live">live — quiet panel</span><span>try it ↓</span></div>
+				<div class="demo-body"></div>
+			</div>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Then → now</h2><span class="mono">[03]</span></header>
+			<div class="case-body">
+				<p class="case-lead">From a <s>fixed canvas</s> to the open web.</p>
+				<div class="case-text">
+					<p>For years Crestron panels were drawn in VT Pro-e: a fixed canvas for each panel size, built from the tool's own set of objects. It works — but it boxes the interface in.</p>
+					<p>CH5 turns the panel into a web app. Crestron Construct still builds CH5 panels from widgets — but underneath it's HTML, CSS and JavaScript. Quiet Panel is written in that code directly, so a 3D floor plan, real physics, one project for every screen and a self-running demo are all on the table.</p>
+				</div>
+			</div>
+			<table class="vs mono">
+				<thead><tr><th></th><th>vt pro-e <span>the old way</span></th><th>ch5, hand-built <span>quiet panel</span></th></tr></thead>
+				<tbody>
+				<tr><th>built with</th><td>its own design tool and object set</td><td>web code — html, css, javascript, with crestron's ch5 libraries</td></tr>
+				<tr><th>screen sizes</th><td>one fixed layout per panel size</td><td>one project; the layout follows the screen</td></tr>
+				<tr><th>graphics</th><td>images and built-in objects</td><td>anything the browser can draw: a live 3d floor plan, physics, themes</td></tr>
+				<tr><th>preview</th><td>needs the tool or a panel</td><td>any browser</td></tr>
+				<tr><th>history</th><td>binary project files</td><td>plain text — git, diffs, every version</td></tr>
+				<tr><th>demo</th><td>processor + program on a bench</td><td>runs standalone and tours itself</td></tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>How it works</h2><span class="mono">[04]</span></header>
+			<ol class="how">
+				<li><div><h3>One design file</h3><p>The whole interface lives in one design file. A small build script renders it with Preact into a plain web project — the panel behaves exactly like the prototype.</p><code class="code">Main.dc.html → build_demo.js → SOURCE/ → .ch5z</code></div></li>
+				<li><div><h3>A floor plan you can hold</h3><p>A wireframe 3D model of both floors: orbit, pan, pinch, twist. Walls flat, half or full, five finishes. Tap a room and the camera flies in with its controls.</p></div></li>
+				<li><div><h3>Physics, not animation</h3><p>A flick keeps turning and fades out like a turntable. Speed is read from the last 100 ms of the drag, so letting go feels natural.</p></div></li>
+				<li><div><h3>Every screen, one project</h3><p>Landscape for wall panels, portrait for an iPad, phone for an iPhone — chosen from the screen's shape. Touch targets at least 40 px.</p></div></li>
+				<li><div><h3>It demos itself</h3><p>A ghost finger taps through 5 chapters with captions. Left alone for two minutes, it starts again — showroom mode.</p></div></li>
+			</ol>
+		</section>
+
+		<section class="section">
+			<header class="section-head"><h2>Snaps</h2><span class="mono">[05]</span></header>
+			<div class="snaps">
+				<figure class="snap snap--wide"><img src="./assets/quiet-panel/plan-3d.webp" alt="Quiet Panel 3D wireframe floor plan with room list" loading="lazy" width="1280" height="800"><figcaption class="mono">01 / floor plan — 3D, live</figcaption></figure>
+				<figure class="snap"><img src="./assets/quiet-panel/home.webp" alt="Quiet Panel home screen with moods and clock" loading="lazy" width="1280" height="800"><figcaption class="mono">02 / home — moods, clock, summary</figcaption></figure>
+				<figure class="snap"><img src="./assets/quiet-panel/both-floors.webp" alt="Both floors stacked in 3D" loading="lazy" width="1280" height="800"><figcaption class="mono">03 / both floors, stacked</figcaption></figure>
+				<figure class="snap"><img src="./assets/quiet-panel/walls-timber.webp" alt="Floor plan with timber wall finish" loading="lazy" width="1280" height="800"><figcaption class="mono">04 / wall finish — timber</figcaption></figure>
+				<figure class="snap"><img src="./assets/quiet-panel/room-lounge.webp" alt="Lounge room page with scenes, lights, drapes and climate" loading="lazy" width="1280" height="800"><figcaption class="mono">05 / a room — scenes, lights, drapes</figcaption></figure>
+			</div>
+		</section>
+
+		<section class="section about">
+			<header class="section-head"><h2>Learned</h2><span class="mono">[06]</span></header>
+			<div class="about-body">
+				<p class="about-lead">Calm beats <em>clever</em>.</p>
+				<ul class="now">
+					<li>Take things out <span>light sweeps, tap ripples, particles — three builds removed effects</span></li>
+					<li>Feel is physics <span>momentum, easing and release decide if it feels expensive</span></li>
+					<li>Show, don't spec <span>a client holding the panel answers questions a PDF never will</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="section">
+			<a class="next" href="./bankcal.html">
+				<span><span class="mono">next case →</span><br><span class="next-title">BankCal</span></span>
+				<span class="arrow">→</span>
+			</a>
+		</section>
+	</main>
+	<footer class="footer mono">
+		<span>© <span data-year></span> JA · <span class="clock" data-clock>dubai</span></span>
+		<span class="hide-sm">press <span class="kbd">/</span> to go anywhere · <span class="kbd">←</span><span class="kbd">→</span> to flip cases</span>
+		<a href="https://www.linkedin.com/in/jassimalfonso/" target="_blank" rel="noopener">linkedin ↗</a>
+		<a href="#">top ↑</a>
+	</footer>
+	<script src="./js/site.js"></script>
+	<script src="./js/demos.js"></script>
+</body>
+</html>

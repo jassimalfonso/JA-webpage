@@ -989,6 +989,38 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: v
 .row a:hover .row-tags, .row a:focus-visible .row-tags { opacity: 0; }
 @media (max-width: 800px), (hover: none) { .row-thumb { display: none; } }
 
+/* Quiet Panel: live CH5 panel + then/now table */
+.qp-bar { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; margin-bottom: 1.25rem; }
+.qp-seg { display: flex; border: 1px solid var(--w); }
+.qp-seg button { padding: 0.45rem 0.75rem !important; }
+.qp-seg button + button { border-left: 1px solid var(--w) !important; }
+.qp-seg button[aria-pressed="true"] { background: var(--w); color: var(--k); }
+.qp-tour { margin-left: auto; border: 1px solid var(--w) !important; padding: 0.45rem 0.9rem !important; font-weight: 700; }
+.qp-tour:hover, .qp-tour[aria-pressed="true"] { background: var(--w) !important; color: var(--k) !important; }
+.qp-stage { display: grid; place-items: center; min-height: 12rem; }
+.qp-device { position: relative; overflow: hidden; outline: 1px solid var(--hair); transition: width 0.35s var(--snap), height 0.35s var(--snap); }
+.qp-device iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; background: #e8e4dc; }
+.qp-hint { margin-top: 0.9rem; text-align: center; }
+
+.vs { width: 100%; border-collapse: collapse; margin-top: 2.5rem; font-size: 0.8rem; }
+.vs th, .vs td { text-align: left; padding: 0.8rem 1rem; border-bottom: 1px solid var(--hair); vertical-align: top; }
+.vs thead th { border-bottom: 2px solid var(--w); font-weight: 700; font-size: 0.9rem; }
+.vs thead th span { display: block; font-weight: 400; font-size: 0.65rem; color: var(--g); margin-top: 0.2rem; }
+.vs tbody th { color: var(--g); font-weight: 400; width: 9rem; }
+.vs td:nth-child(2) { color: var(--g); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--g) 60%, transparent); }
+.vs td:nth-child(3) { font-weight: 700; }
+.vs thead th:last-child, .vs td:nth-child(3) { background: color-mix(in srgb, var(--w) 6%, transparent); }
+@media (max-width: 800px) {
+	.qp-tour { margin-left: 0; }
+	.vs, .vs tbody, .vs tr, .vs th, .vs td { display: block; width: auto; }
+	.vs thead { display: none; }
+	.vs tr { padding: 0.75rem 0; border-bottom: 1px solid var(--hair); }
+	.vs th, .vs td { border: 0; padding: 0.15rem 0; }
+	.vs td:nth-child(2)::before { content: "vt pro-e  "; color: var(--g); text-decoration: none; display: inline-block; width: 5.5rem; }
+	.vs td:nth-child(3)::before { content: "ch5  "; color: var(--g); font-weight: 400; display: inline-block; width: 5.5rem; }
+	.vs thead th:last-child, .vs td:nth-child(3) { background: none; }
+}
+
 /* 404 */
 .lost { min-height: 100svh; display: grid; place-content: center; text-align: center; padding: var(--pad); gap: 1.5rem; }
 .lost h1 { font-size: clamp(8rem, 40vw, 30rem); font-weight: 900; letter-spacing: -0.08em; line-height: 0.8; }

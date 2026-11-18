@@ -306,7 +306,7 @@
 
 	/* ---------- command palette ---------- */
 	const PAGES = [
-		["home", "./index.html"], ["ikonplan", "./ikonplan.html"], ["bankcal", "./bankcal.html"], ["the aform show", "./aform.html"],
+		["home", "./index.html"], ["ikonplan", "./ikonplan.html"], ["quiet panel — crestron ch5", "./quietpanel.html"], ["bankcal", "./bankcal.html"], ["the aform show", "./aform.html"],
 		["scoreboard", "./scoreboard.html"], ["passgen", "./passgen.html"], ["counter", "./counter.html"], ["hometown", "./hometown.html"],
 	];
 	const ACTIONS = [
