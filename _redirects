@@ -1,0 +1,3 @@
+/quietpanel       /thepanel       301
+/quietpanel.html  /thepanel.html  301
+/assets/quiet-panel/*  /assets/the-panel/:splat  301

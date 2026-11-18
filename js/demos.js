@@ -791,12 +791,12 @@
 	};
 
 	/* =====================================================
-	   QUIET PANEL — the real CH5 panel, live in a frame
+	   THE PANEL — the real CH5 panel, live in a frame
 	   Rendered at the panel's own size, then scaled to fit, so it looks
 	   exactly as it would on the wall / iPad / phone.
 	   ===================================================== */
 	demos.panel = (root) => {
-		const SRC = "./assets/quiet-panel/demo.html";
+		const SRC = "./assets/the-panel/demo.html";
 		const SIZES = {
 			Landscape: { w: 1280, h: 800, label: "wall panel" },
 			Portrait: { w: 820, h: 1180, label: "ipad" },
@@ -813,7 +813,7 @@
 				</div>
 				<button type="button" class="qp-tour" data-tour aria-pressed="false">▶ guided tour</button>
 			</div>
-			<div class="qp-stage"><div class="qp-device"><iframe title="Quiet Panel — live Crestron CH5 demo" loading="lazy"></iframe></div></div>
+			<div class="qp-stage"><div class="qp-device"><iframe title="The Panel — live Crestron CH5 demo" loading="lazy"></iframe></div></div>
 			<p class="pl-hint mono qp-hint">tap anything. drag the floor plan to orbit, scroll or pinch to zoom.</p>`;
 		const stage = $(".qp-stage", root), dev = $(".qp-device", root), frame = $("iframe", root);
 		function url() {

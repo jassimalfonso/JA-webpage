@@ -1029,7 +1029,7 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: v
 .row a:hover .row-tags, .row a:focus-visible .row-tags { opacity: 0; }
 @media (max-width: 800px), (hover: none) { .row-thumb { display: none; } }
 
-/* Quiet Panel: live CH5 panel + then/now table */
+/* The Panel: live CH5 panel + then/now table */
 .qp-bar { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; margin-bottom: 1.25rem; }
 .qp-seg { display: flex; border: 1px solid var(--w); }
 .qp-seg button { padding: 0.45rem 0.75rem !important; }
