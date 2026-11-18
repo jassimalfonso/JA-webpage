@@ -1242,3 +1242,17 @@ body.nav-hide .nav { transform: translateY(-100%); }
 body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
 /* keep underlines tight to the text while the tap area stays large */
 .contact-links a, .case-links a, .listen-links a { border-bottom: 0 !important; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+/* about: role in the title block fits on small phones; photo strip */
+.titleblock { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.titleblock dd { white-space: normal; overflow-wrap: anywhere; }
+.about-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.6rem, 1.5vw, 1.2rem); margin-top: clamp(2rem, 5vw, 3.5rem); }
+.about-strip figure { margin: 0; }
+.about-strip img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--k); filter: contrast(1.02); transition: transform 0.4s var(--snap); }
+.about-strip figure:hover img { transform: translateY(-4px); }
+.about-strip figcaption { margin-top: 0.5rem; font-size: 0.75rem; color: var(--k); opacity: 0.75; }
+@media (max-width: 700px) {
+	.about-strip { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 72%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 0.5rem; }
+	.about-strip figure { scroll-snap-align: start; }
+}
+.about-strip img { border-color: currentColor; }
+.about-strip figcaption { color: inherit; background: none; border: 0; padding: 0; }

@@ -246,21 +246,10 @@
 	setTheme(current());
 	$$("[data-theme-toggle]").forEach((b) => b.addEventListener("click", toggleTheme));
 
-	/* ---------- nav: solid once scrolled, out of the way while reading down ---------- */
+	/* ---------- nav: always there; turns solid once you scroll off the hero ---------- */
 	{
-		let lastY = scrollY, ticking = false;
-		const update = () => {
-			ticking = false;
-			const y = scrollY, dy = y - lastY;
-			document.body.classList.toggle("nav-solid", y > 60);
-			// hide after a real downward scroll (not a twitch), show on any upward scroll or near the top
-			if (y < 120 || dy < -6) document.body.classList.remove("nav-hide");
-			else if (dy > 6 && !document.querySelector(".pal:not([hidden])")) document.body.classList.add("nav-hide");
-			if (Math.abs(dy) > 6) lastY = y;
-		};
-		window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
-		// keyboard users: tabbing into the nav always brings it back
-		document.querySelector(".nav")?.addEventListener("focusin", () => document.body.classList.remove("nav-hide"));
+		const update = () => document.body.classList.toggle("nav-solid", scrollY > 60);
+		window.addEventListener("scroll", update, { passive: true });
 		update();
 	}
 
