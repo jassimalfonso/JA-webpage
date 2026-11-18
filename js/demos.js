@@ -456,28 +456,67 @@
 		}
 		$(".af-modes", root).addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { mode = b.dataset.mode; render(); } });
 
-		// captions: three words at a time, current word highlighted
-		let timer = null;
+		// captions: three words at a time, current word highlighted.
+		// With sound: the browser's own voice reads the edit, and the captions follow the voice.
+		const LABEL = "▶ play the reel, with sound";
+		const canSpeak = "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined";
+		let timer = null, running = false, utter = null;
 		const cap = $(".af-cap", root), bar = $(".af-bar", root), clock = $('[data-v="t"]', root), btn = $(".af-play", root);
-		function stop() { clearTimeout(timer); timer = null; btn.textContent = "▶ play reel captions"; }
+		btn.textContent = canSpeak ? LABEL : "▶ play reel captions";
+		function stop() {
+			clearTimeout(timer); timer = null; running = false;
+			if (canSpeak) speechSynthesis.cancel();
+			btn.textContent = canSpeak ? LABEL : "▶ play reel captions";
+			cap.innerHTML = ""; bar.style.width = "0"; clock.textContent = "0:00";
+		}
+		function show(ws, i, total) {
+			const start = i - (i % 3);
+			cap.innerHTML = ws.slice(start, start + 3).map((w, k) => (start + k === i ? `<b>${w.t}</b>` : `<span>${w.t}</span>`)).join(" ");
+			const elapsed = ws.slice(0, i + 1).reduce((s, w) => s + w.d, 0);
+			bar.style.width = (elapsed / total) * 100 + "%";
+			clock.textContent = "0:" + String(Math.floor(elapsed)).padStart(2, "0");
+		}
 		function play() {
-			if (timer) return stop();
+			if (running) return stop();
+			running = true;
 			const ws = kept().map((w) => ({ ...w, t: w.t.replace(/[.,]$/, "") }));
 			const total = ws.reduce((s, w) => s + w.d, 0);
-			let i = 0, elapsed = 0;
 			btn.textContent = "■ stop";
+			let i = 0, voiceDriven = false;
+			// fallback clock — used until (unless) the voice reports its word boundaries
 			(function step() {
-				if (i >= ws.length) { cap.innerHTML = ""; bar.style.width = "0"; clock.textContent = "0:00"; return stop(); }
-				const start = i - (i % 3);
-				cap.innerHTML = ws.slice(start, start + 3).map((w, k) => (start + k === i ? `<b>${w.t}</b>` : `<span>${w.t}</span>`)).join(" ");
-				elapsed += ws[i].d;
-				bar.style.width = (elapsed / total) * 100 + "%";
-				clock.textContent = "0:" + String(Math.floor(elapsed)).padStart(2, "0");
+				if (!running || voiceDriven) return;
+				if (i >= ws.length) { if (!canSpeak) stop(); return; }
+				show(ws, i, total);
 				timer = setTimeout(step, ws[i].d * 1000 * 0.9);
 				i++;
 			})();
+			if (!canSpeak) return;
+			// the line as it would sound after this edit; fillers are read as they're spoken
+			const text = kept().map((w) => w.t).join(" ");
+			const starts = []; // char offset of each word, to map boundaries back to words
+			kept().reduce((pos, w) => (starts.push(pos), pos + w.t.length + 1), 0);
+			speechSynthesis.cancel();
+			utter = new SpeechSynthesisUtterance(text);
+			utter.rate = 0.95;
+			const en = speechSynthesis.getVoices().filter((v) => /^en/i.test(v.lang));
+			utter.voice = en.find((v) => /natural|google|samantha|daniel/i.test(v.name)) || en[0] || null;
+			utter.onboundary = (e) => {
+				if (e.name && e.name !== "word") return;
+				voiceDriven = true;
+				clearTimeout(timer);
+				let k = starts.findIndex((s, j) => e.charIndex >= s && (j === starts.length - 1 || e.charIndex < starts[j + 1]));
+				if (k >= 0) show(ws, k, total);
+			};
+			utter.onend = () => { if (running) stop(); };
+			utter.onerror = () => { /* no voice available: captions carry on silently */ };
+			speechSynthesis.speak(utter);
 		}
 		btn.addEventListener("click", play);
+		// switching the edit mid-play restarts it with the new cut, so you can A/B by ear
+		$(".af-modes", root).addEventListener("click", () => { if (running) { stop(); play(); } });
+		new IntersectionObserver((ents) => { if (!ents[0].isIntersecting && running) stop(); }).observe(root);
+		if (canSpeak) speechSynthesis.getVoices(); // warm the voice list
 		render();
 	};
 
@@ -485,6 +524,140 @@
 	   THE AFORM SHOW — three locations, one sound
 	   Each clip is recorded somewhere different. Clean, then level.
 	   ===================================================== */
+	/* -----------------------------------------------------
+	   Room audio engine (Web Audio, nothing downloaded).
+	   A synthetic "voice" (buzz through vowel formants, in syllables)
+	   is recorded into one of three rooms: echo, AC hum, wind + traffic.
+	   The three processing steps change the chain live while it plays.
+	   ----------------------------------------------------- */
+	function roomAudio() {
+		const AC = window.AudioContext || window.webkitAudioContext;
+		if (!AC) return null;
+		const ctx = new AC();
+		const master = ctx.createGain();
+		master.gain.value = 0.5;
+		const limiter = ctx.createDynamicsCompressor();
+		limiter.threshold.value = -6; limiter.ratio.value = 12; limiter.attack.value = 0.003; limiter.release.value = 0.1;
+		master.connect(limiter).connect(ctx.destination);
+
+		const noiseBuf = (brown) => {
+			const b = ctx.createBuffer(1, ctx.sampleRate * 4, ctx.sampleRate), d = b.getChannelData(0);
+			let last = 0;
+			for (let i = 0; i < d.length; i++) {
+				const w = Math.random() * 2 - 1;
+				d[i] = brown ? (last = (last + 0.02 * w) / 1.02) * 3.5 : w;
+			}
+			return b;
+		};
+		const WHITE = noiseBuf(false), BROWN = noiseBuf(true);
+		// a small room: 1.4 s of decaying noise as an impulse response
+		const ir = ctx.createBuffer(2, ctx.sampleRate * 1.4, ctx.sampleRate);
+		for (let c = 0; c < 2; c++) {
+			const d = ir.getChannelData(c);
+			for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.6);
+		}
+		const VOWELS = [[730, 1090, 2440], [530, 1840, 2480], [270, 2290, 3010], [570, 840, 2410], [300, 870, 2240], [640, 1190, 2390]];
+		const loop = (buf) => { const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true; return s; };
+		const ramp = (p, v, t = 0.25) => p.setTargetAtTime(v, ctx.currentTime, t / 3);
+		let cur = null;
+
+		function start(clip, state) {
+			stop();
+			const now = ctx.currentTime + 0.05, LEN = 7;
+			const out = ctx.createGain(); out.connect(master);
+			const level = ctx.createGain(); level.connect(out);
+			// --- the voice ---
+			const glottis = ctx.createOscillator(); glottis.type = "sawtooth";
+			const voiced = ctx.createGain(); voiced.gain.value = 0;
+			const f = VOWELS[0].map((hz, i) => { const b = ctx.createBiquadFilter(); b.type = "bandpass"; b.frequency.value = hz; b.Q.value = 9 - i * 2; return b; });
+			const fg = [1, 0.5, 0.25].map((g) => { const n = ctx.createGain(); n.gain.value = g; return n; });
+			const voice = ctx.createGain(); voice.gain.value = 3.2;
+			f.forEach((b, i) => { glottis.connect(b); b.connect(fg[i]).connect(voiced); });
+			voiced.connect(voice);
+			const breath = loop(WHITE), hiss = ctx.createBiquadFilter(), cons = ctx.createGain();
+			hiss.type = "highpass"; hiss.frequency.value = 3500; cons.gain.value = 0;
+			breath.connect(hiss).connect(cons).connect(voice);
+			// syllables: pitch drifts like speech, vowels change, words have gaps.
+			// Seeded, so every room "says" the exact same sentence — only the room differs.
+			let seed = 20261118;
+			const rand = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+			let t = now, pitch = 118;
+			while (t < now + LEN) {
+				const words = 2 + ((rand() * 4) | 0);
+				for (let w = 0; w < words && t < now + LEN; w++) {
+					const syl = 1 + ((rand() * 3) | 0);
+					for (let s = 0; s < syl; s++) {
+						const d = 0.12 + rand() * 0.14, v = VOWELS[(rand() * VOWELS.length) | 0];
+						pitch = Math.min(150, Math.max(95, pitch + (rand() - 0.55) * 14));
+						glottis.frequency.setTargetAtTime(pitch, t, 0.03);
+						f.forEach((b, i) => b.frequency.setTargetAtTime(v[i], t, 0.025));
+						if (rand() < 0.45) { cons.gain.setValueAtTime(0.25, t); cons.gain.setTargetAtTime(0, t + 0.02, 0.015); }
+						voiced.gain.setTargetAtTime(1, t + 0.02, 0.02);
+						voiced.gain.setTargetAtTime(0.15, t + d, 0.025);
+						t += d + 0.03;
+					}
+					voiced.gain.setTargetAtTime(0, t, 0.03);
+					t += 0.08 + rand() * 0.12;
+				}
+				t += 0.3 + rand() * 0.35; // end of a phrase
+			}
+			// --- the room ---
+			const dry = ctx.createGain(), wet = ctx.createGain(), verb = ctx.createConvolver();
+			verb.buffer = ir;
+			const lowcut = ctx.createBiquadFilter(); lowcut.type = "highpass"; lowcut.frequency.value = 20;
+			voice.connect(lowcut); lowcut.connect(dry).connect(level); lowcut.connect(verb).connect(wet).connect(level);
+			// --- the location's noise ---
+			const noiseOut = ctx.createGain(); noiseOut.connect(level);
+			const srcs = [glottis, breath];
+			if (clip.hum) { // 50 Hz mains + harmonics, the AC unit's whine
+				[50, 100, 150, 250].forEach((hz, i) => {
+					const o = ctx.createOscillator(), g = ctx.createGain();
+					o.frequency.value = hz; g.gain.value = [0.5, 0.35, 0.25, 0.08][i];
+					o.connect(g).connect(noiseOut); srcs.push(o);
+				});
+				const fan = loop(BROWN), fl = ctx.createBiquadFilter(), fg2 = ctx.createGain();
+				fl.type = "lowpass"; fl.frequency.value = 700; fg2.gain.value = 0.6;
+				fan.connect(fl).connect(fg2).connect(noiseOut); srcs.push(fan);
+			} else if (clip.echo) { // a quiet office: air handling
+				const air = loop(BROWN), al = ctx.createBiquadFilter(), ag = ctx.createGain();
+				al.type = "lowpass"; al.frequency.value = 500; ag.gain.value = 0.5;
+				air.connect(al).connect(ag).connect(noiseOut); srcs.push(air);
+			} else { // site: gusting wind + passing traffic
+				const wind = loop(BROWN), wl = ctx.createBiquadFilter(), wg = ctx.createGain(), gust = ctx.createOscillator(), gd = ctx.createGain();
+				wl.type = "lowpass"; wl.frequency.value = 380; wg.gain.value = 0.9;
+				gust.frequency.value = 0.35; gd.gain.value = 0.7; gust.connect(gd).connect(wg.gain);
+				wind.connect(wl).connect(wg).connect(noiseOut);
+				const road = loop(WHITE), rl = ctx.createBiquadFilter(), rg = ctx.createGain(), pass = ctx.createOscillator(), pd = ctx.createGain();
+				rl.type = "bandpass"; rl.frequency.value = 220; rl.Q.value = 0.7; rg.gain.value = 0.15;
+				pass.frequency.value = 0.12; pd.gain.value = 0.14; pass.connect(pd).connect(rg.gain);
+				road.connect(rl).connect(rg).connect(noiseOut);
+				srcs.push(wind, gust, road, pass);
+			}
+			const dB = (x) => Math.pow(10, x / 20);
+			const apply = (s, fast) => {
+				const tc = fast ? 0.01 : 0.35;
+				ramp(level.gain, dB((s.lv ? -16 : clip.lufs) + 16) * 0.9, tc);
+				ramp(noiseOut.gain, s.nr ? dB(-62 - clip.lufs) * 4 : dB(clip.noise - clip.lufs) * 4, tc);
+				ramp(lowcut.frequency, s.nr ? 90 : 20, tc);
+				ramp(wet.gain, s.eq ? 0.04 : clip.echo ? 0.75 : 0.12, tc);
+				ramp(dry.gain, s.eq ? 1 : clip.echo ? 0.6 : 0.95, tc);
+			};
+			apply(state, true);
+			srcs.forEach((s) => s.start(now));
+			const end = setTimeout(() => cur && cur.onend && cur.onend(), (LEN + 0.6) * 1000);
+			cur = { srcs, out, apply, end, onend: null };
+			return cur;
+		}
+		function stop() {
+			if (!cur) return;
+			const c = cur; cur = null;
+			clearTimeout(c.end);
+			c.out.gain.setTargetAtTime(0, ctx.currentTime, 0.04);
+			setTimeout(() => { c.srcs.forEach((s) => { try { s.stop(); } catch (_) {} }); c.out.disconnect(); }, 200);
+		}
+		return { ctx, start, stop, update: (s) => cur && cur.apply(s) };
+	}
+
 	demos.rooms = (root) => {
 		const TARGET = -16; // LUFS — a common podcast loudness target
 		const CLIPS = [
@@ -517,6 +690,7 @@
 			<div class="rm-rows">
 				${CLIPS.map((c, k) => `
 				<div class="rm-row" data-k="${k}">
+					<button type="button" class="rm-play mono" data-play="${k}" aria-label="Play the ${c.name} recording" data-cursor="listen">▶</button>
 					<div class="rm-label mono"><b>${c.name}</b><span>${c.issue}</span></div>
 					<div class="rm-wave" aria-hidden="true">${c.bars.map(() => "<i></i>").join("")}</div>
 					<div class="rm-read mono"><span data-r="lufs"></span><span data-r="noise"></span></div>
@@ -525,6 +699,10 @@
 			<div class="rm-foot mono">
 				<span>loudness spread between locations <b data-v="spread"></b></span>
 				<span class="rm-verdict" data-v="verdict"></span>
+			</div>
+			<div class="rm-listen mono">
+				<button type="button" class="rm-all" data-play="all">▶ play all three in a row</button>
+				<span class="rm-sound">🔊 sound on — synthesised voice, not a real recording</span>
 			</div>
 			<p class="pl-hint mono rm-hint">recorded wherever the guest is. press the steps in any order.</p>`;
 
@@ -564,7 +742,51 @@
 			if (b.dataset.step === "reset") Object.keys(on).forEach((k) => (on[k] = false));
 			else on[b.dataset.step] = !on[b.dataset.step];
 			render();
+			if (audio) audio.update(on); // you hear the step while it plays
 		});
+
+		/* --- sound --- */
+		let audio = null, playing = null, seqTimer = null;
+		function mark(k) {
+			playing = k;
+			$$(".rm-row", root).forEach((r) => r.classList.toggle("is-playing", +r.dataset.k === k));
+			$$("[data-play]", root).forEach((b) => {
+				const isAll = b.dataset.play === "all";
+				const live = isAll ? seqTimer !== null : +b.dataset.play === k && seqTimer === null;
+				b.textContent = isAll ? (live ? "■ stop" : "▶ play all three in a row") : live ? "■" : "▶";
+			});
+		}
+		function stopAll() { clearTimeout(seqTimer); seqTimer = null; if (audio) audio.stop(); mark(null); }
+		function play(k, inSeq) {
+			if (!audio) { audio = roomAudio(); if (!audio) return; }
+			if (audio.ctx.state === "suspended") audio.ctx.resume();
+			const c = audio.start(CLIPS[k], on);
+			c.onend = () => (inSeq ? null : stopAll());
+			mark(k);
+		}
+		root.addEventListener("click", (e) => {
+			const b = e.target.closest("[data-play]");
+			if (!b) return;
+			if (b.dataset.play === "all") {
+				if (seqTimer !== null) return stopAll();
+				let k = 0;
+				seqTimer = 0;
+				const next = () => {
+					if (seqTimer === null) return;
+					if (k >= CLIPS.length) return stopAll();
+					play(k++, true);
+					seqTimer = setTimeout(next, 3200); // 3 s of each room, back to back: hear the jumps
+				};
+				next();
+				return;
+			}
+			const k = +b.dataset.play;
+			if (playing === k && seqTimer === null) return stopAll();
+			clearTimeout(seqTimer); seqTimer = null;
+			play(k, false);
+		});
+		// stop when it scrolls out of sight
+		new IntersectionObserver((ents) => { if (!ents[0].isIntersecting && playing !== null) stopAll(); }).observe(root);
 		render();
 	};
 
@@ -631,6 +853,21 @@
 		}, { rootMargin: "300px" }).observe(stage);
 		fit();
 	};
+
+	/* ---------- third-party players: load only when scrolled near ---------- */
+	$$("[data-embed]").forEach((box) => {
+		new IntersectionObserver((ents, io) => {
+			if (!ents.some((e) => e.isIntersecting)) return;
+			io.disconnect();
+			const f = document.createElement("iframe");
+			f.src = box.dataset.embed;
+			f.title = "The aForm Show on Spotify";
+			f.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+			f.loading = "lazy";
+			f.addEventListener("load", () => $(".listen-load", box)?.remove());
+			box.appendChild(f);
+		}, { rootMargin: "400px" }).observe(box);
+	});
 
 	/* ---------- mount ---------- */
 	$$("[data-demo]").forEach((el) => {

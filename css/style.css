@@ -780,7 +780,36 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: v
 .rm-steps button[aria-pressed="true"] b { background: var(--k); color: var(--w); }
 .rm-steps .rm-reset { padding-left: 0.8rem !important; margin-left: auto; }
 .rm-rows { display: grid; gap: 1px; background: color-mix(in srgb, var(--w) 25%, transparent); border: 1px solid color-mix(in srgb, var(--w) 25%, transparent); }
-.rm-row { display: grid; grid-template-columns: 10rem 1fr 8.5rem; gap: 1rem; align-items: center; padding: 0.9rem 1rem; background: var(--k); }
+.rm-row { display: grid; grid-template-columns: 2.5rem 10rem 1fr 8.5rem; gap: 1rem; align-items: center; padding: 0.9rem 1rem; background: var(--k); transition: background 0.2s; }
+.rm-play {
+	width: 2.5rem; height: 2.5rem; display: grid; place-items: center;
+	border: 1px solid var(--w) !important; border-radius: 50%; font-size: 0.8rem !important;
+}
+.rm-play:hover, .rm-row.is-playing .rm-play { background: var(--w) !important; color: var(--k) !important; }
+.rm-row.is-playing { background: color-mix(in srgb, var(--w) 7%, var(--k)); }
+.rm-row.is-playing .rm-wave i { animation: eq 0.7s ease-in-out infinite alternate; transform-origin: center; }
+.rm-row.is-playing .rm-wave i:nth-child(3n) { animation-duration: 0.5s; }
+.rm-row.is-playing .rm-wave i:nth-child(4n) { animation-duration: 0.9s; }
+@keyframes eq { to { transform: scaleY(0.55); } }
+.rm-listen { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; margin-top: 1rem; }
+.rm-all { border: 1px solid var(--w) !important; padding: 0.5rem 0.9rem !important; font-weight: 700; }
+.rm-all:hover { background: var(--w) !important; color: var(--k) !important; }
+.rm-sound { color: var(--g); font-size: 0.7rem; }
+
+/* the real show */
+.listen { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2.5rem; align-items: start; padding-top: 2.5rem; }
+.listen-embed { border: 1px solid var(--w); background: var(--k); min-height: 352px; position: relative; }
+.listen-embed iframe { display: block; width: 100%; height: 352px; border: 0; }
+.listen-embed .listen-load {
+	position: absolute; inset: 0; display: grid; place-items: center; gap: 0.5rem; text-align: center;
+	color: var(--g); font: 0.75rem var(--mono);
+}
+.listen-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.25rem; }
+.listen-links a { border-bottom: 2px solid var(--w); }
+.listen-links a:hover { background: var(--w); color: var(--k); }
+@media (max-width: 800px) {
+	.listen { grid-template-columns: 1fr; gap: 1.5rem; }
+}
 .rm-label { display: grid; }
 .rm-label span, .rm-read { color: var(--g); }
 .rm-read { display: grid; text-align: right; font-variant-numeric: tabular-nums; }
@@ -792,7 +821,7 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: v
 .rm-foot.is-ok { background: var(--w); color: var(--k); }
 .rm-verdict { font-weight: 700; }
 @media (max-width: 800px) {
-	.rm-row { grid-template-columns: 1fr 1fr; }
+	.rm-row { grid-template-columns: 2.5rem 1fr auto; gap: 0.6rem 0.8rem; }
 	.rm-wave { grid-column: 1 / -1; order: 3; height: 48px; }
 	.rm-steps .rm-reset { margin-left: 0; }
 }
