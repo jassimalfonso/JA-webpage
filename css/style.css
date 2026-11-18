@@ -1094,8 +1094,7 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: v
 	.preview { display: none; }
 
 	.about-body { grid-template-columns: 1fr; }
-	.footer { flex-direction: column; text-align: center; }
-	.footer span:nth-child(2) { display: none; }
+	.footer > .hide-sm { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1218,3 +1217,28 @@ input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; }
 	.nav-links a, .nav-links button { padding: 0 0.35rem; }
 }
 @media (max-width: 380px) { .hide-xs { display: none; } }
+
+
+/* footer: one quiet line, no chin */
+.footer { flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: space-between; padding-top: 0.6rem; padding-bottom: 0.6rem; }
+.contact { padding-bottom: clamp(2rem, 5vw, 3.5rem); }
+.case .footer { padding-bottom: calc(0.6rem + 4.5rem); }
+
+/* nav: transparent over the hero; once you scroll it becomes a solid strip,
+   tucks away while you read down, and comes back the moment you scroll up */
+.nav { transition: transform 0.3s var(--snap), background 0.2s, padding 0.2s; }
+body.nav-solid .nav {
+	mix-blend-mode: normal;
+	background: color-mix(in srgb, var(--k) 92%, transparent);
+	-webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+	color: var(--w);
+	border-bottom: 1px solid var(--hair);
+	padding-top: 0.6rem; padding-bottom: 0.6rem;
+}
+body.nav-solid .nav-brand svg { fill: var(--w); transform-origin: 0 50%; }
+body.nav-solid .nav-links a:hover, body.nav-solid .nav-links a[aria-current],
+body.nav-solid .nav-links button:hover { background: var(--w); color: var(--k); }
+body.nav-hide .nav { transform: translateY(-100%); }
+body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
+/* keep underlines tight to the text while the tap area stays large */
+.contact-links a, .case-links a, .listen-links a { border-bottom: 0 !important; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
