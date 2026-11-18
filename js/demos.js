@@ -688,7 +688,7 @@
 		];
 		const on = { nr: false, eq: false, lv: false };
 		let voiceBytes = null;
-		new IntersectionObserver((ents, o) => { if (ents[0].isIntersecting) { voiceBytes = fetch("./assets/aform/voice.m4a").then((r) => r.arrayBuffer()); o.disconnect(); } }, { rootMargin: "600px" }).observe(root);
+		new IntersectionObserver((ents, o) => { if (ents[0].isIntersecting) { voiceBytes = fetch("./assets/aform/voice.m4a").then((r) => r.arrayBuffer()).catch(() => null); o.disconnect(); } }, { rootMargin: "600px" }).observe(root);
 		const N = 64;
 		let seed = 7;
 		const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
