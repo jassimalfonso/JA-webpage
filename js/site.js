@@ -314,6 +314,21 @@
 				</button>
 				<a class="cb-side cb-next" href="./${ns}.html" rel="next"><span class="cb-name">${nn}</span><span aria-hidden="true">→</span></a>`;
 			document.body.appendChild(bar);
+			// swipe the case bar (or the end-of-case block) sideways to flip cases — not the page itself, the demos drag sideways
+			const swipe = (el) => {
+				let x0 = null, y0 = 0;
+				el.addEventListener("touchstart", (e) => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; }, { passive: true });
+				el.addEventListener("touchend", (e) => {
+					if (x0 === null) return;
+					const t = e.changedTouches[0], dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
+					if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+						const go = dx < 0 ? ns : ps;
+						el.style.transition = "transform 0.18s ease-in"; el.style.transform = `translateX(${dx < 0 ? -24 : 24}px)`;
+						setTimeout(() => (location.href = `./${go}.html`), 120);
+					}
+				}, { passive: true });
+			};
+			swipe(bar); $$("[data-swipe]").forEach(swipe);
 			const sec = $(".cb-sec b", bar);
 			const io2 = new IntersectionObserver((ents) => ents.forEach((en) => {
 				if (en.isIntersecting) { const f = SECTIONS.find(([, s]) => s === en.target); if (f) sec.textContent = f[0].toLowerCase(); }

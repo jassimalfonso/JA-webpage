@@ -399,15 +399,15 @@
 	demos.aform = (root) => {
 		// A real reel from the show. Times are where each word starts and ends (s).
 		// kind: w word · f filler (kept by ear, cut by a tool) · s stumble · h cut by a tool, but it carried meaning
-		const WORDS = [[0.2,0.75,"Programs","w",0.8],[0.75,0.9,"here","w",0.92],[0.9,1.0,"are","w",0.48],[1.0,1.15,"quite","w",0.26],[1.15,1.25,"a","w",0.2],[1.25,1.85,"surprise,","w",0.55],[1.85,2.0,"you","f",0.47],[2.0,2.2,"know","f",0.33],[2.2,2.3,"when","w",0.52],[2.3,2.5,"you","w",0.4],[2.5,2.62,"get","w",0.11],[2.62,2.75,"off","w",0.42],[2.75,3.0,"the","w",0.16],[3.0,3.25,"plane","w",0.99],[3.25,3.38,"and","w",0.39],[3.38,3.5,"you","w",0.51],[3.5,3.8,"get","w",0.37],[3.8,4.0,"given","w",0.37],[4.0,4.25,"this","w",0.39],[4.25,4.6,"program.","w",0.64],[4.6,4.75,"It's","w",0.14],[4.75,5.0,"like","h",0.35],[5.0,5.5,"goodness,","h",0.41],[5.5,6.0,"that's","s",0.87],[6.0,6.25,"quite—","s",1.0],[6.25,6.5,"that's","w",0.7],[6.5,6.75,"quite,","w",0.6],[6.75,6.9,"you","f",0.42],[6.9,7.0,"know,","f",0.53],[7.0,7.25,"that's","w",0.44],[7.25,7.6,"quite","w",0.54],[7.6,7.75,"a","w",0.11],[7.75,8.0,"quick","w",0.55],[8.0,8.5,"program.","w",0.52],[8.5,9.1,"Yeah.","f",0.4],[9.1,9.25,"But","w",0.54],[9.25,9.5,"what","w",0.49],[9.5,9.85,"happens","w",0.48],[9.85,10.0,"maybe","w",0.51],[10.0,10.5,"halfway","w",0.37],[10.5,10.62,"through","w",0.79],[10.62,10.75,"that,","w",0.59],[10.75,11.0,"maybe","w",0.29],[11.0,11.15,"you","w",0.35],[11.15,11.25,"get","w",0.25],[11.25,11.5,"a","w",0.48],[11.5,12.0,"change","w",0.4],[12.0,12.5,"in","w",0.37],[12.5,13.1,"brief,","w",0.55],[13.2,13.5,"you","w",0.3],[13.5,14.0,"get","w",0.13],[14.0,14.25,"something","w",0.5],[14.25,14.75,"occurs","w",0.63],[14.75,15.0,"that","w",0.26],[15.0,15.25,"actually","w",0.32],[15.25,15.5,"delays","w",0.77],[15.5,15.75,"that","w",0.2],[15.75,16.35,"process.","w",0.17],[16.6,16.75,"And","w",0.38],[16.75,17.0,"I","w",0.76],[17.0,17.25,"think","w",0.28],[17.25,17.4,"at","w",0.38],[17.4,17.5,"the","w",0.23],[17.5,18.1,"outset,","w",0.47],[18.1,18.25,"if","w",0.1],[18.25,18.4,"you","w",0.38],[18.4,18.5,"could","w",0.34],[18.5,18.75,"have","w",0.32],[18.75,19.0,"somebody","w",0.47],[19.0,19.25,"saying","w",0.43],[19.25,19.5,"“Okay,","h",0.47],[19.5,19.62,"we're","w",0.68],[19.62,19.75,"gonna","w",0.74],[19.75,20.0,"give","w",0.47],[20.0,20.6,"you","w",0.25],[20.9,21.0,"x","w",0.49],[21.0,21.15,"amount","w",0.36],[21.15,21.25,"of","w",0.14],[21.25,21.5,"time,”","w",0.47],[21.5,21.75,"or","w",0.3],[21.75,21.9,"“How","w",0.57],[21.9,22.0,"much","w",0.21],[22.0,22.15,"time","w",0.36],[22.15,22.25,"do","w",0.63],[22.25,22.5,"you","w",0.31],[22.5,22.65,"think","w",0.22],[22.65,22.75,"you're","w",0.69],[22.75,23.0,"gonna","w",0.66],[23.0,23.5,"need?”","w",0.54],[23.5,23.75,"So","f",0.75],[23.75,24.25,"maybe,","w",0.7],[24.25,24.5,"you","f",0.72],[24.5,24.75,"know,","f",0.42],[24.75,25.0,"certainly","w",0.58],[25.0,25.07,"I","w",0.1],[25.07,25.15,"don't","w",0.31],[25.15,25.25,"think","w",0.5],[25.25,25.5,"you","w",0.52],[25.5,25.62,"guys","w",0.72],[25.62,25.75,"could","w",0.16],[25.75,26.25,"stomach","w",0.39],[26.25,26.75,"the","w",0.2],[26.75,27.25,"timescales","w",0.64],[27.25,27.4,"that","w",0.24],[27.4,27.5,"you","w",0.27],[27.5,28.0,"get","w",0.53],[28.0,28.25,"in","w",0.67],[28.25,28.5,"Europe","w",0.48],[28.5,28.75,"or","w",0.72],[28.75,29.1,"London.","w",0.39],[29.1,29.25,"But","w",0.33],[29.25,29.75,"maybe","w",0.64],[29.75,29.9,"another","w",0.52],[29.9,30.0,"sort","w",0.24],[30.0,30.25,"of","w",0.29],[30.25,30.6,"30%","w",0.5],[30.6,31.0,"on","w",0.45],[31.0,31.25,"your—","s",0.52],[31.25,31.85,"concept,","w",0.48],[32.0,32.25,"30%","w",0.32],[32.25,32.4,"on","w",0.42],[32.4,32.5,"your","w",0.57],[32.5,33.0,"SD—","w",0.57],[33.0,33.25,"might","w",0.66],[33.25,33.5,"help","w",0.23],[33.5,33.75,"set","w",0.47],[33.75,34.0,"things","w",0.57],[34.0,34.5,"up—","w",0.6],[34.5,34.75,"more","w",0.63],[34.75,34.9,"for","w",0.58],[34.9,35.0,"a","w",0.63],[35.0,35.25,"really","w",0.52],[35.25,35.75,"considered","w",0.4],[35.75,36.0,"DD,","w",0.58],[36.0,36.25,"and","w",0.35],[36.25,36.4,"a","w",0.17],[36.4,36.5,"bit","w",0.4],[36.5,36.75,"more","w",0.46],[36.75,37.0,"time","w",0.39],[37.0,37.1,"for","w",0.26],[37.1,37.25,"you","w",0.38],[37.25,37.5,"to","w",0.31],[37.5,37.75,"work","w",0.44],[37.75,38.0,"on","w",0.31],[38.0,38.3,"design.","w",0.45]].map(([a, b, t, k, lv]) => ({ a, b, t, k, lv }));
-		const END = 38.3;
+		const WORDS = [[0.0,0.1,"So","w",0.19],[0.1,0.25,"I've","w",0.99],[0.25,0.5,"been","w",0.79],[0.5,0.75,"here","w",0.49],[0.75,0.85,"for","w",0.16],[0.85,1.0,"4","w",0.55],[1.0,1.7,"years—","w",0.4],[1.75,2.0,"right,","f",0.33],[2.0,2.1,"and","w",0.31],[2.1,2.25,"I","w",0.02],[2.25,2.75,"practiced","w",0.17],[2.75,3.0,"in","w",0.51],[3.0,3.25,"London","w",0.47],[3.25,3.5,"for","w",0.31],[3.5,3.75,"about","w",0.2],[3.75,4.0,"25","w",0.29],[4.0,4.5,"years.","w",0.33],[4.5,4.75,"And","w",0.26],[4.75,5.0,"so","w",0.56],[5.0,5.25,"obviously","w",0.29],[5.25,5.5,"I","w",0.44],[5.5,5.6,"can","w",0.47],[5.6,6.0,"really","w",0.49],[6.0,6.25,"see","w",0.41],[6.25,6.35,"the","w",0.12],[6.35,7.05,"differences","w",0.23],[7.25,7.5,"between","w",0.44],[7.5,7.75,"the","w",0.4],[7.75,8.25,"2","w",0.35],[8.25,8.75,"cities.","w",0.24],[8.75,8.85,"I'd","w",1.0],[8.85,9.0,"probably","w",0.65],[9.0,9.4,"say","w",0.71],[9.4,9.5,"the","w",0.51],[9.5,9.75,"most","w",0.48],[9.75,10.1,"striking","w",0.59],[10.1,10.25,"thing","w",0.52],[10.25,10.5,"is","w",0.36],[10.5,10.75,"that","w",0.27],[10.75,11.0,"Dubai's","w",0.64],[11.0,11.25,"got","w",0.31],[11.25,11.95,"tremendous","w",0.43],[12.0,12.25,"vision,","w",0.27],[12.25,12.5,"it's","w",0.12],[12.5,13.0,"got","w",0.32],[13.0,13.25,"speed.","w",0.78],[13.25,13.95,"It's—","s",0.24],[14.0,14.25,"good","w",0.42],[14.25,14.5,"ambition,","w",0.36],[14.5,14.75,"good","w",0.4],[14.75,15.45,"inertia.","w",0.51],[15.75,16.0,"So","w",0.81],[16.0,16.25,"when","w",0.6],[16.25,16.75,"things","w",0.36],[16.75,16.85,"want","w",0.23],[16.85,17.0,"to","w",0.48],[17.0,17.25,"happen","w",0.52],[17.25,17.5,"here,","w",0.39],[17.5,17.75,"like","f",0.34],[17.75,17.9,"say","f",0.45],[17.9,18.0,"a","w",0.63],[18.0,18.25,"new","w",0.67],[18.25,18.5,"airport","w",0.3],[18.5,19.0,"or—","s",0.62],[19.0,19.05,"mm,","f",0.61],[19.05,19.25,"you","f",0.3],[19.25,19.5,"know,","f",0.59],[19.5,19.6,"the","w",0.68],[19.6,19.75,"new","w",0.79],[19.75,20.0,"metro","w",0.41],[20.0,20.25,"lines,","w",0.59],[20.25,20.5,"they","w",0.43],[20.5,20.75,"happen","w",0.31],[20.75,21.0,"very","w",0.58],[21.0,21.4,"quickly.","w",0.2],[21.4,21.5,"In","w",0.26],[21.5,21.75,"the","w",0.72],[21.75,22.1,"UK,","w",0.62],[22.1,22.25,"you","f",0.27],[22.25,22.5,"know,","f",0.34],[22.5,22.6,"some","w",0.09],[22.6,22.75,"of","w",0.54],[22.75,23.0,"your","w",0.54],[23.0,23.5,"larger","w",0.44],[23.5,23.75,"projects","w",0.33],[23.75,24.0,"like","h",0.24],[24.0,24.4,"that","w",0.33],[24.4,24.5,"have","w",0.28],[24.5,24.75,"to","w",0.57],[24.75,24.85,"go","w",0.23],[24.85,25.0,"through,","w",0.71],[25.0,25.25,"you","f",0.3],[25.25,25.4,"know,","f",0.09],[25.4,25.5,"a","w",0.08],[25.5,25.75,"big","w",0.47],[25.75,26.25,"political","w",0.38],[26.25,26.75,"minefield.","w",0.37],[26.75,26.85,"There's","w",0.12],[26.85,27.0,"a","w",0.31],[27.0,27.25,"lot","w",0.41],[27.25,27.5,"more","w",0.44],[27.5,27.75,"red","w",0.42],[27.75,28.4,"tape","w",0.23],[28.4,28.5,"somewhere","w",0.3],[28.5,28.75,"like","h",0.38],[28.75,29.0,"London,","w",0.42],[29.0,29.1,"and","w",0.08],[29.1,29.5,"therefore","w",0.35],[29.5,29.75,"the","w",0.5],[29.75,30.0,"bigger","w",0.44],[30.0,30.25,"projects","w",0.26],[30.25,30.5,"just","w",0.07],[30.5,30.6,"take","w",0.17],[30.6,30.75,"a","w",0.29],[30.75,31.0,"lot","w",0.33],[31.0,31.5,"longer","w",0.36],[31.5,31.75,"to","w",0.43],[31.75,32.25,"mature,","w",0.34],[32.25,32.5,"to","s",0.48],[32.5,32.75,"happen—","s",0.21],[32.75,32.85,"right,","f",0.21],[32.85,33.0,"and","w",0.36],[33.0,33.1,"to","w",0.72],[33.1,33.25,"get","w",0.45],[33.25,33.3,"to","w",0.07],[33.3,33.5,"the","w",0.2],[33.5,33.6,"point","w",0.47],[33.6,33.75,"where","w",0.3],[33.75,33.85,"they","w",0.34],[33.85,34.0,"can","w",0.35],[34.0,34.25,"be","w",0.51],[34.25,34.75,"implemented.","w",0.17]].map(([a, b, t, k, lv]) => ({ a, b, t, k, lv }));
+		const END = 34.75;
 		const MODES = {
-			raw: { label: "raw", cut: () => false, len: "38 s", noise: "hum + room", tone: "yes",
+			raw: { label: "raw", cut: () => false, len: "35 s", noise: "hum + room", tone: "yes",
 				note: "how it comes off the recorder on location: AC hum, a live room, the level sitting low. (the noise is simulated over the finished edit.)" },
-			ear: { label: "by ear", cut: () => false, len: "38 s", noise: "clean", tone: "yes",
-				note: "what went out: cleaned and levelled. the “you know”s and the restart stay — that's how he talks." },
+			ear: { label: "by ear", cut: () => false, len: "35 s", noise: "clean", tone: "yes",
+				note: "what went out: cleaned and levelled. the “you know”s and the odd restart stay — that's how he talks." },
 			blunt: { label: "auto tool", cut: (w) => w.k !== "w", noise: "gated", tone: "no",
-				note: "an auto tool strips every filler and stumble — and takes “like goodness” and the “okay” of a quote with them. shorter, choppy, and it stops sounding like him." },
+				note: "an auto tool strips every filler and stumble — and every “like” with them, so “somewhere like London” becomes “somewhere London”. shorter, choppy, and it stops sounding like him." },
 		};
 		let mode = "raw";
 
@@ -422,7 +422,7 @@
 					<dl class="af-stats mono">
 						<div><dt>length</dt><dd data-v="len"></dd></div>
 						<div><dt>background</dt><dd data-v="noise"></dd></div>
-						<div><dt>sounds like him</dt><dd data-v="tone"></dd></div>
+						<div><dt>like him</dt><dd data-v="tone"></dd></div>
 					</dl>
 					<p class="af-note mono pl-hint"></p>
 				</div>
@@ -432,7 +432,7 @@
 						<div class="af-reel-top mono"><span>reel</span><span data-v="t">0:00</span></div>
 						<span class="af-bar"></span>
 					</div>
-					<button type="button" class="af-play mono">▶ play the reel, with sound</button>
+					<button type="button" class="af-play mono">▶ play with sound</button>
 				</div>
 			</div>`;
 
@@ -491,7 +491,8 @@
 		}
 
 		// ---- playback: transcript follows the voice; the tool's cuts are skipped for real ----
-		let raf = 0;
+		let raf = 0, lastK = -2;
+		const textBox = $(".af-text", root);
 		function tick() {
 			const t = video.currentTime;
 			if (MODES[mode].cut !== MODES.raw.cut) {
@@ -499,13 +500,18 @@
 				if (w) { let j = WORDS.indexOf(w); while (WORDS[j + 1] && MODES[mode].cut(WORDS[j + 1])) j++; video.currentTime = WORDS[j].b; }
 			}
 			let k = -1; for (let i = 0; i < WORDS.length && WORDS[i].a <= t; i++) k = i;
-			spans.forEach((s, i) => s.classList.toggle("is-now", i === k));
+			if (k !== lastK) {
+				spans.forEach((s, i) => s.classList.toggle("is-now", i === k));
+				// keep the spoken word in view inside the transcript window (never scrolls the page)
+				if (k >= 0) { const sp = spans[k], box = textBox; const y = sp.offsetTop - box.clientHeight / 3; if (Math.abs(box.scrollTop - y) > 8) box.scrollTo({ top: y, behavior: "smooth" }); }
+				lastK = k;
+			}
 			bar.style.width = Math.min(100, (t / END) * 100) + "%";
 			clock.textContent = "0:" + String(Math.floor(t)).padStart(2, "0");
 			raf = requestAnimationFrame(tick);
 		}
 		function reset() {
-			cancelAnimationFrame(raf); btn.textContent = "▶ play the reel, with sound";
+			cancelAnimationFrame(raf); btn.textContent = "▶ play with sound"; lastK = -2;
 			spans.forEach((s) => s.classList.remove("is-now"));
 		}
 		btn.addEventListener("click", () => {
@@ -515,8 +521,8 @@
 			if (video.ended || video.currentTime >= END) video.currentTime = 0;
 			video.play().catch(() => {});
 		});
-		video.addEventListener("play", () => { btn.textContent = "■ pause"; cancelAnimationFrame(raf); tick(); });
-		video.addEventListener("pause", reset);
+		video.addEventListener("play", () => { btn.textContent = "■ pause"; cancelAnimationFrame(raf); tick(); if (chain) chain.ctx.resume(); });
+		video.addEventListener("pause", () => { reset(); if (chain) chain.ctx.suspend(); }); // the simulated hum stops with the reel
 		video.addEventListener("ended", () => { reset(); bar.style.width = "0"; clock.textContent = "0:00"; });
 		video.addEventListener("click", () => btn.click());
 		// switching the edit while it plays changes the sound in place, so you can A/B by ear
@@ -577,7 +583,7 @@
 			if (REAL) {
 				voice = ctx.createGain(); voice.gain.value = 1.6;
 				const line = ctx.createBufferSource(); line.buffer = REAL; line.connect(voice);
-				line.window = [13.15, LEN]; // "you get something occurs that actually delays that process…"
+				line.window = [8.7, LEN]; // "I'd probably say the most striking thing is that Dubai's got tremendous vision…"
 				voiceSrcs = [line];
 			} else {
 				const glottis = ctx.createOscillator(); glottis.type = "sawtooth";
