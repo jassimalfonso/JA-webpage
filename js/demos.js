@@ -427,9 +427,10 @@
 					<p class="af-note mono pl-hint"></p>
 				</div>
 				<div>
-					<div class="af-reel af-reel--video">
-						<video playsinline preload="none" poster="./assets/aform/reel-poster.jpg" src="./assets/aform/reel.mp4" aria-label="A reel from The aForm Show"></video>
+					<div class="af-reel" role="button" tabindex="-1" aria-label="Play or pause the reel">
+						<audio preload="none" src="./assets/aform/voice.m4a"></audio>
 						<div class="af-reel-top mono"><span>reel</span><span data-v="t">0:00</span></div>
+						<p class="af-cap" aria-live="off"></p>
 						<span class="af-bar"></span>
 					</div>
 					<button type="button" class="af-play mono">▶ play with sound</button>
@@ -437,7 +438,7 @@
 			</div>`;
 
 		const spans = $$(".af-text span", root), bars = $$(".af-wave i", root);
-		const video = $("video", root), btn = $(".af-play", root), bar = $(".af-bar", root), clock = $('[data-v="t"]', root);
+		const video = $("audio", root), btn = $(".af-play", root), bar = $(".af-bar", root), clock = $('[data-v="t"]', root);
 		const cutLen = () => WORDS.filter((w) => MODES[mode].cut(w)).reduce((s, w) => s + (w.b - w.a), 0);
 		function render() {
 			WORDS.forEach((w, i) => {
@@ -492,7 +493,8 @@
 
 		// ---- playback: transcript follows the voice; the tool's cuts are skipped for real ----
 		let raf = 0, lastK = -2;
-		const textBox = $(".af-text", root);
+		const textBox = $(".af-text", root), cap = $(".af-cap", root);
+		const clean = (t) => t.replace(/[.,—“”]/g, "");
 		function tick() {
 			const t = video.currentTime;
 			if (MODES[mode].cut !== MODES.raw.cut) {
@@ -502,6 +504,10 @@
 			let k = -1; for (let i = 0; i < WORDS.length && WORDS[i].a <= t; i++) k = i;
 			if (k !== lastK) {
 				spans.forEach((s, i) => s.classList.toggle("is-now", i === k));
+				const kept = WORDS.map((w, i) => i).filter((i) => !MODES[mode].cut(WORDS[i]));
+				const at = kept.indexOf(k);
+				if (at < 0) cap.innerHTML = "";
+				else { const g = at - (at % 3); cap.innerHTML = kept.slice(g, g + 3).map((i) => (i === k ? `<b>${clean(WORDS[i].t)}</b>` : `<span>${clean(WORDS[i].t)}</span>`)).join(" "); }
 				// keep the spoken word in view inside the transcript window (never scrolls the page)
 				if (k >= 0) { const sp = spans[k], box = textBox; const y = sp.offsetTop - box.clientHeight / 3; if (Math.abs(box.scrollTop - y) > 8) box.scrollTo({ top: y, behavior: "smooth" }); }
 				lastK = k;
@@ -523,8 +529,8 @@
 		});
 		video.addEventListener("play", () => { btn.textContent = "■ pause"; cancelAnimationFrame(raf); tick(); if (chain) chain.ctx.resume(); });
 		video.addEventListener("pause", () => { reset(); if (chain) chain.ctx.suspend(); }); // the simulated hum stops with the reel
-		video.addEventListener("ended", () => { reset(); bar.style.width = "0"; clock.textContent = "0:00"; });
-		video.addEventListener("click", () => btn.click());
+		video.addEventListener("ended", () => { reset(); cap.innerHTML = ""; bar.style.width = "0"; clock.textContent = "0:00"; });
+		$(".af-reel", root).addEventListener("click", () => btn.click());
 		// switching the edit while it plays changes the sound in place, so you can A/B by ear
 		$(".af-modes", root).addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) { mode = b.dataset.mode; render(); } });
 		new IntersectionObserver((ents) => { if (!ents[0].isIntersecting && !video.paused) video.pause(); }).observe(root);

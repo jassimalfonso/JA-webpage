@@ -1311,3 +1311,8 @@ body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
 	.af-grid { grid-template-columns: minmax(0, 1fr) 13rem; }
 	.af-reel { max-height: none; max-width: none; }
 }
+/* aForm reel: placeholder + captions, black and white */
+.af-reel { cursor: pointer; }
+.af-cap { z-index: 1; }
+.af-cap b { background: var(--w); color: var(--k); padding: 0 0.15em; }
+.af-cap span { color: var(--w); }
