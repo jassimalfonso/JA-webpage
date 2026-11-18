@@ -1316,3 +1316,26 @@ body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
 .af-cap { z-index: 1; }
 .af-cap b { background: var(--w); color: var(--k); padding: 0 0.15em; }
 .af-cap span { color: var(--w); }
+/* end of a case: previous / next, then every case as a list — no swipe, no chin */
+.swipe-hint { display: none !important; }
+.casenav { padding-top: clamp(2.5rem, 6vw, 4.5rem); padding-bottom: clamp(2rem, 5vw, 3.5rem); }
+.cn-pair { display: grid; grid-template-columns: 1fr 1fr; border-top: 3px solid var(--w); }
+.cn-pair a { display: flex; flex-direction: column; gap: 0.35rem; padding: 1.1rem 0; min-height: 44px; }
+.cn-pair a + a { text-align: right; align-items: flex-end; border-left: 1px solid var(--hair); padding-left: 1rem; }
+.cn-pair .mono { color: var(--g); font-size: 0.75rem; }
+.cn-pair b { font-size: clamp(1.4rem, 4.5vw, 3rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.04em; line-height: 0.95; }
+.cn-pair a:hover b { color: transparent; -webkit-text-stroke: 1.5px var(--w); }
+.cn-label { color: var(--g); font-size: 0.72rem; margin: 1.5rem 0 0.4rem; }
+.case-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 2rem; border-top: 1px solid var(--hair); }
+.case-list a { display: grid; grid-template-columns: 2.2rem minmax(0, 1fr) auto; align-items: center; gap: 0.5rem; min-height: 44px; border-bottom: 1px solid var(--hair); font-size: 0.85rem; }
+.case-list .cl-no, .case-list .cl-tag { color: var(--g); }
+.case-list .cl-tag { font-size: 0.7rem; }
+.case-list .cl-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.case-list a:hover { background: var(--w); color: var(--k); }
+.case-list a:hover .cl-no, .case-list a:hover .cl-tag { color: inherit; }
+.case-list .is-here a { color: var(--w); }
+.case-list .is-here .cl-tag { color: var(--w); }
+.case-list .is-here .cl-no::before { content: "● "; }
+.case .footer { padding-bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px)); }
+@media (max-width: 600px) { .case-list { grid-template-columns: 1fr; } .cn-pair b { font-size: 1.3rem; } }
+@media (min-width: 601px) { .case-list { grid-template-rows: repeat(4, auto); grid-auto-flow: column; } }
