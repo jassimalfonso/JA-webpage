@@ -293,7 +293,7 @@
 
 	/* ---------- the cases, in order (also feeds the index menu) ---------- */
 	const CASES = [
-		["ikonplan", "ikonplan"], ["thepanel", "the panel."], ["aform", "aform show"], ["showroom", "the showroom"], ["bankcal", "bankcal"],
+		["ikonplan", "ikonplan"], ["aform", "aform show"], ["thepanel", "the panel."], ["showroom", "the showroom"], ["bankcal", "bankcal"],
 		["scoreboard", "scoreboard"], ["passgen", "passgen"], ["counter", "counter"], ["hometown", "hometown"],
 	];
 	const SECTIONS = []; // this page's sections, for the case bar and the index
@@ -348,7 +348,7 @@
 
 	/* ---------- command palette ---------- */
 	const PAGES = [
-		["home", "./index.html"], ["ikonplan", "./ikonplan.html"], ["the panel. — crestron ch5", "./thepanel.html"], ["the aform show", "./aform.html"], ["the showroom — sketch → gui", "./showroom.html"], ["bankcal", "./bankcal.html"],
+		["home", "./index.html"], ["ikonplan", "./ikonplan.html"], ["the aform show", "./aform.html"], ["the panel. — crestron ch5", "./thepanel.html"], ["the showroom — sketch → gui", "./showroom.html"], ["bankcal", "./bankcal.html"],
 		["scoreboard", "./scoreboard.html"], ["passgen", "./passgen.html"], ["counter", "./counter.html"], ["hometown", "./hometown.html"],
 	];
 	const ACTIONS = [
