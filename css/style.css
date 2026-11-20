@@ -1355,3 +1355,10 @@ body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
 .sk-range:focus-visible + * , .sk-stage:has(.sk-range:focus-visible) { outline: 2px solid var(--w); outline-offset: 3px; }
 /* the smallest phones: long case titles (e.g. "The Showroom") may go below 3rem so a word never runs off screen */
 @media (max-width: 360px) { .hero--case .hero-title { font-size: max(2.4rem, min(20rem, calc((100vw - 2 * var(--pad)) / (var(--n, 8) * 0.6)), calc((100svh - 22rem) / 0.85))); } }
+/* The Showroom: where it started — the sketching clip and the page */
+.sk-origin { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(0.75rem, 2vw, 1.5rem); max-width: 52rem; }
+.sk-origin figure { margin: 0; }
+.sk-origin video, .sk-origin img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid currentColor; background: #111; }
+.sk-origin figcaption { margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.75; }
+.sk-stage { cursor: ew-resize; }
+.sk-range { pointer-events: none; }

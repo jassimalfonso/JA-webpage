@@ -833,7 +833,7 @@
 	   ===================================================== */
 	demos.sketch = (root) => {
 		const PAIRS = { rooms: "rooms", lights: "lights", climate: "climate" };
-		let cur = "rooms", pos = 50;
+		let cur = "rooms", pos = 50, touched = false;
 		root.innerHTML = `
 			<div class="sk-bar mono" role="group" aria-label="Screen">
 				${Object.keys(PAIRS).map((k) => `<button type="button" data-pair="${k}" aria-pressed="${k === cur}">${k}</button>`).join("")}
@@ -853,14 +853,32 @@
 			b.src = `./assets/the-showroom/gui-${k}.webp`; b.alt = `The finished ${k} screen`;
 			$$("[data-pair]", root).forEach((x) => x.setAttribute("aria-pressed", x.dataset.pair === k));
 		}
-		range.addEventListener("input", () => set(+range.value));
+		range.addEventListener("input", () => set(+range.value)); // keyboard
+		// touch / mouse: the divider follows the finger anywhere on the picture
+		const stage = $(".sk-stage", root);
+		let dragging = false, x0 = 0, y0 = 0, decided = false;
+		const at = (e) => { const r = stage.getBoundingClientRect(); set(Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100))); };
+		stage.addEventListener("pointerdown", (e) => { dragging = true; decided = e.pointerType === "mouse"; x0 = e.clientX; y0 = e.clientY; touched = true; if (decided) { stage.setPointerCapture(e.pointerId); at(e); } });
+		stage.addEventListener("pointermove", (e) => {
+			if (!dragging) return;
+			if (!decided) { // a sideways move slides; an up-down move is left to scroll the page
+				const dx = Math.abs(e.clientX - x0), dy = Math.abs(e.clientY - y0);
+				if (dx < 6 && dy < 6) return;
+				if (dy > dx) { dragging = false; return; }
+				decided = true; try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+			}
+			at(e);
+		});
+		const end = (e) => { if (dragging && !decided) at(e); dragging = false; }; // a plain tap jumps there
+		stage.addEventListener("pointerup", end);
+		stage.addEventListener("pointercancel", () => (dragging = false));
 		root.addEventListener("click", (e) => { const x = e.target.closest("[data-pair]"); if (x) show(x.dataset.pair); });
 		// a short hint of motion the first time it scrolls into view
 		new IntersectionObserver((ents, o) => {
 			if (!ents[0].isIntersecting) return; o.disconnect();
 			if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 			let t0 = null;
-			const step = (t) => { t0 ??= t; const k = Math.min(1, (t - t0) / 1600); set(50 + Math.sin(k * Math.PI * 2) * 22 * (1 - k)); if (k < 1) requestAnimationFrame(step); };
+			const step = (t) => { if (touched) return; t0 ??= t; const k = Math.min(1, (t - t0) / 1600); set(50 + Math.sin(k * Math.PI * 2) * 22 * (1 - k)); if (k < 1) requestAnimationFrame(step); };
 			requestAnimationFrame(step);
 		}, { threshold: 0.6 }).observe(root);
 		show(cur); set(pos);
