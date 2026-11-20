@@ -828,6 +828,78 @@
 	   Rendered at the panel's own size, then scaled to fit, so it looks
 	   exactly as it would on the wall / iPad / phone.
 	   ===================================================== */
+	/* =====================================================
+	   THE SHOWROOM — sketch → gui slider, and the live panel
+	   ===================================================== */
+	demos.sketch = (root) => {
+		const PAIRS = { rooms: "rooms", lights: "lights", climate: "climate" };
+		let cur = "rooms", pos = 50;
+		root.innerHTML = `
+			<div class="sk-bar mono" role="group" aria-label="Screen">
+				${Object.keys(PAIRS).map((k) => `<button type="button" data-pair="${k}" aria-pressed="${k === cur}">${k}</button>`).join("")}
+			</div>
+			<div class="sk-stage">
+				<img class="sk-a" alt="" width="1280" height="800" draggable="false">
+				<img class="sk-b" alt="" width="1280" height="800" draggable="false">
+				<span class="sk-line" aria-hidden="true"><i>⟷</i></span>
+				<span class="sk-tag sk-tag--a mono">sketch</span><span class="sk-tag sk-tag--b mono">gui</span>
+				<input class="sk-range" type="range" min="0" max="100" value="50" aria-label="Slide between the sketch and the finished screen">
+			</div>`;
+		const a = $(".sk-a", root), b = $(".sk-b", root), line = $(".sk-line", root), range = $(".sk-range", root);
+		function set(p) { pos = p; b.style.clipPath = `inset(0 0 0 ${p}%)`; line.style.left = p + "%"; range.value = p; }
+		function show(k) {
+			cur = k;
+			a.src = `./assets/the-showroom/sketch-${k}.webp`; a.alt = `Notebook sketch of the ${k} screen`;
+			b.src = `./assets/the-showroom/gui-${k}.webp`; b.alt = `The finished ${k} screen`;
+			$$("[data-pair]", root).forEach((x) => x.setAttribute("aria-pressed", x.dataset.pair === k));
+		}
+		range.addEventListener("input", () => set(+range.value));
+		root.addEventListener("click", (e) => { const x = e.target.closest("[data-pair]"); if (x) show(x.dataset.pair); });
+		// a short hint of motion the first time it scrolls into view
+		new IntersectionObserver((ents, o) => {
+			if (!ents[0].isIntersecting) return; o.disconnect();
+			if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+			let t0 = null;
+			const step = (t) => { t0 ??= t; const k = Math.min(1, (t - t0) / 1600); set(50 + Math.sin(k * Math.PI * 2) * 22 * (1 - k)); if (k < 1) requestAnimationFrame(step); };
+			requestAnimationFrame(step);
+		}, { threshold: 0.6 }).observe(root);
+		show(cur); set(pos);
+	};
+
+	demos.showroom = (root) => {
+		const SRC = "./assets/the-showroom/demo.html", W = 1280, H = 800;
+		let theme = "light", tour = false;
+		root.innerHTML = `
+			<div class="qp-bar mono">
+				<div class="qp-seg" role="group" aria-label="Theme">
+					${["light", "dark"].map((t) => `<button type="button" data-theme="${t}" aria-pressed="${t === theme}">${t}</button>`).join("")}
+				</div>
+				<button type="button" class="qp-tour" data-tour aria-pressed="false">▶ guided tour</button>
+			</div>
+			<div class="qp-stage"><div class="qp-device"><iframe title="The Showroom — live Crestron CH5 mockup" loading="lazy"></iframe></div></div>
+			<p class="pl-hint mono qp-hint">tap a room. drag the dimmers. the tour keeps going until you touch the screen.</p>`;
+		const stage = $(".qp-stage", root), dev = $(".qp-device", root), frame = $("iframe", root);
+		const url = () => `${SRC}?enter=1&theme=${theme}${tour ? "&demo=1" : ""}`;
+		function fit() {
+			const k = Math.min(stage.clientWidth / W, Math.min(innerHeight * 0.78, 760) / H, 1);
+			frame.style.width = W + "px"; frame.style.height = H + "px"; frame.style.transform = `scale(${k})`;
+			dev.style.width = W * k + "px"; dev.style.height = H * k + "px";
+		}
+		function load() { frame.src = url(); fit(); }
+		root.addEventListener("click", (e) => {
+			const b = e.target.closest("button"); if (!b) return;
+			if (b.dataset.theme) theme = b.dataset.theme;
+			if (b.hasAttribute("data-tour")) tour = !tour;
+			$$("[data-theme]", root).forEach((x) => x.setAttribute("aria-pressed", x.dataset.theme === theme));
+			$("[data-tour]", root).setAttribute("aria-pressed", tour);
+			load();
+		});
+		addEventListener("resize", fit);
+		// only load the panel when it is near the screen
+		new IntersectionObserver((ents, o) => { if (ents[0].isIntersecting) { load(); o.disconnect(); } }, { rootMargin: "400px" }).observe(root);
+		fit();
+	};
+
 	demos.panel = (root) => {
 		const SRC = "./assets/the-panel/demo.html";
 		const SIZES = {

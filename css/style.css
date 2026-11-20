@@ -1338,4 +1338,18 @@ body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
 .case-list .is-here .cl-no::before { content: "● "; }
 .case .footer { padding-bottom: calc(0.6rem + env(safe-area-inset-bottom, 0px)); }
 @media (max-width: 600px) { .case-list { grid-template-columns: 1fr; } .cn-pair b { font-size: 1.3rem; } }
-@media (min-width: 601px) { .case-list { grid-template-rows: repeat(4, auto); grid-auto-flow: column; } }
+@media (min-width: 601px) { .case-list { grid-template-rows: repeat(5, auto); grid-auto-flow: column; } }
+/* The Showroom: sketch → gui slider */
+.sk-bar { display: flex; gap: 0; margin-bottom: 0.75rem; border: 1px solid var(--hair); width: max-content; max-width: 100%; }
+.sk-bar button { padding: 0.6rem 1rem; min-height: 44px; font: inherit; color: var(--g); background: none; border: 0; border-right: 1px solid var(--hair); cursor: pointer; }
+.sk-bar button:last-child { border-right: 0; }
+.sk-bar button[aria-pressed="true"] { background: var(--w); color: var(--k); }
+.sk-stage { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border: 2px solid var(--w); background: #f2f1ed; touch-action: pan-y; user-select: none; }
+.sk-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.sk-a { filter: contrast(1.05); }
+.sk-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px; background: #0d0d0c; pointer-events: none; }
+.sk-line i { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 2.6rem; height: 2.6rem; display: grid; place-items: center; background: #0d0d0c; color: #ecebe6; border-radius: 50%; font-style: normal; font-size: 1rem; }
+.sk-tag { position: absolute; top: 0.6rem; padding: 0.2rem 0.5rem; background: #0d0d0c; color: #ecebe6; font-size: 0.72rem; pointer-events: none; }
+.sk-tag--a { left: 0.6rem; } .sk-tag--b { right: 0.6rem; }
+.sk-range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; -webkit-appearance: none; appearance: none; }
+.sk-range:focus-visible + * , .sk-stage:has(.sk-range:focus-visible) { outline: 2px solid var(--w); outline-offset: 3px; }
