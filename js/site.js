@@ -435,7 +435,7 @@
 		}, { passive: true });
 	}
 	const ti = document.querySelector(".tabbar [data-tab-index]");
-	if (ti) ti.addEventListener("click", () => document.querySelector(".nav [data-palette]")?.click());
+	if (ti) ti.addEventListener("click", () => setTimeout(() => document.querySelector("[data-palette]")?.click(), 0));
 	const tabs = [...document.querySelectorAll(".tabbar [data-tab]")];
 	if (tabs.length && "IntersectionObserver" in window) {
 		const io = new IntersectionObserver((ents) => ents.forEach((e) => {
