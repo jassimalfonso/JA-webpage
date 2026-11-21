@@ -423,3 +423,24 @@
 		if (e.key === "ArrowLeft" && d.prev) location.href = `./${d.prev}.html`;
 	});
 })();
+
+/* home: featured row counter and the phone tab bar's current section */
+(() => {
+	const row = document.querySelector(".feat-row"), count = document.querySelector(".feat-count");
+	if (row && count) {
+		const n = row.children.length;
+		row.addEventListener("scroll", () => {
+			const w = row.children[0].getBoundingClientRect().width + 12;
+			count.textContent = String(Math.min(n, Math.round(row.scrollLeft / w) + 1)).padStart(2, "0") + " / " + String(n).padStart(2, "0");
+		}, { passive: true });
+	}
+	const ti = document.querySelector(".tabbar [data-tab-index]");
+	if (ti) ti.addEventListener("click", () => document.querySelector(".nav [data-palette]")?.click());
+	const tabs = [...document.querySelectorAll(".tabbar [data-tab]")];
+	if (tabs.length && "IntersectionObserver" in window) {
+		const io = new IntersectionObserver((ents) => ents.forEach((e) => {
+			if (e.isIntersecting) tabs.forEach((t) => t.classList.toggle("on", t.dataset.tab === e.target.id));
+		}), { rootMargin: "-45% 0px -50% 0px" });
+		tabs.forEach((t) => { const s = document.getElementById(t.dataset.tab); if (s) io.observe(s); });
+	}
+})();
