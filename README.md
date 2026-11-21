@@ -30,3 +30,11 @@ Optional, from your own PC — pin both snapshots as tags too:
 **Start your own version from the original:** `git switch -c my-build original`, then build and commit there. To put it live, merge it into `main` or point Netlify at that branch.
 
 **Put the original back live:** `git switch main`, then `git revert --no-edit original..main`, then `git push`. This adds a new commit that undoes the revamp, and keeps the revamp in history in case you want it back.
+
+
+## Changing the project order or what is featured
+
+Edit `projects.js` (one small file at the top level) — on GitHub, tap the pencil, change the two lists, commit. Netlify redeploys in about a minute.
+
+- `order`: every project, top to bottom. Sets the numbers, the Work list, previous / next and the index.
+- `featured`: the projects shown as big cards on the home page.

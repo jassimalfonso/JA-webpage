@@ -1395,3 +1395,8 @@ body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
 	body:has(.tabbar) .nav-links li:has(a[href^="#"]), body:has(.tabbar) .nav-links li:has([data-palette]) { display: none; }
 	body:has(.tabbar) .footer { padding-bottom: calc(0.6rem + 52px + env(safe-area-inset-bottom, 0px)); }
 }
+
+/* featured row follows projects.js; "more work" label; jump to the demo */
+@media (min-width: 1101px) { .feat-row { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); } }
+.work-list .row--feature + .row:not(.row--feature)::before { content: "more work"; display: block; font-family: var(--mono, monospace); font-size: 0.75rem; color: var(--g); text-transform: lowercase; padding: 1.75rem 0 0.6rem; }
+.case-links .try-jump { background: var(--w); color: var(--k); padding: 0.35rem 0.7rem; text-decoration: none !important; border: 0 !important; }

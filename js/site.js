@@ -296,6 +296,10 @@
 		["ikonplan", "ikonplan"], ["aform", "aform show"], ["thepanel", "the panel."], ["showroom", "the showroom"], ["bankcal", "bankcal"],
 		["scoreboard", "scoreboard"], ["passgen", "passgen"], ["counter", "counter"], ["hometown", "hometown"],
 	];
+	{ // order comes from projects.js
+		const o = (window.JA_PROJECTS || {}).order || [], at = (s) => { const i = o.indexOf(s); return i < 0 ? 999 : i; };
+		CASES.sort((x, y) => at(x[0]) - at(y[0]));
+	}
 	const SECTIONS = []; // this page's sections, for the case bar and the index
 
 	/* ---------- case bar: previous · where you are · next ---------- */
@@ -351,6 +355,11 @@
 		["home", "./index.html"], ["ikonplan", "./ikonplan.html"], ["the aform show", "./aform.html"], ["the panel. — crestron ch5", "./thepanel.html"], ["the showroom — sketch → gui", "./showroom.html"], ["bankcal", "./bankcal.html"],
 		["scoreboard", "./scoreboard.html"], ["passgen", "./passgen.html"], ["counter", "./counter.html"], ["hometown", "./hometown.html"],
 	];
+	{ // same order in the index menu (home stays first)
+		const o = (window.JA_PROJECTS || {}).order || [], at = (u) => { const i = o.indexOf(u.split("/").pop().replace(".html", "")); return i < 0 ? -1 : i; };
+		const home = PAGES.filter((p) => at(p[1]) < 0), rest = PAGES.filter((p) => at(p[1]) >= 0).sort((x, y) => at(x[1]) - at(y[1]));
+		PAGES.length = 0; PAGES.push(...home, ...rest);
+	}
 	const ACTIONS = [
 		["contact — say hi", () => (location.href = "./index.html#contact"), "page"],
 		["invert colours", toggleTheme, "theme"],
@@ -444,3 +453,6 @@
 		tabs.forEach((t) => { const s = document.getElementById(t.dataset.tab); if (s) io.observe(s); });
 	}
 })();
+
+/* offline support for the installed app (network first, so updates always show) */
+if ("serviceWorker" in navigator && location.protocol === "https:") addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
