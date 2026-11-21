@@ -1400,3 +1400,14 @@ body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
 @media (min-width: 1101px) { .feat-row { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); } }
 .work-list .row--feature + .row:not(.row--feature)::before { content: "more work"; display: block; font-family: var(--mono, monospace); font-size: 0.75rem; color: var(--g); text-transform: lowercase; padding: 1.75rem 0 0.6rem; }
 .case-links .try-jump { background: var(--w); color: var(--k); padding: 0.35rem 0.7rem; text-decoration: none !important; border: 0 !important; }
+
+/* featured cards: silent preview over the picture; card title grows into the case title */
+.feat-img { position: relative; }
+.feat-img video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; opacity: 0; transition: opacity 0.25s; }
+.feat-card.is-playing .feat-img video { opacity: 1; }
+@view-transition { navigation: auto; }
+.hero--case .hero-title { view-transition-name: case-title; }
+::view-transition-group(case-title) { animation-duration: 0.45s; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+::view-transition-old(case-shot) { animation: vt-shot 0.4s ease-in both; }
+@keyframes vt-shot { to { opacity: 0; transform: scale(1.25); } }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }

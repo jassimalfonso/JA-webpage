@@ -26,6 +26,13 @@
 			const url = new URL(a.href, location.href);
 			if (url.origin !== location.origin && url.protocol !== "file:") return;
 			if (url.pathname === location.pathname) return; // same page / hash links
+			// a featured card grows into its case where the browser can do it; the wipe is the fallback
+			if (a.classList.contains("feat-card") && "onpagereveal" in window && window.CSS && CSS.supports("view-transition-name", "x")) {
+				a.querySelector(".feat-name").style.viewTransitionName = "case-title";
+				a.querySelector(".feat-img").style.viewTransitionName = "case-shot";
+				document.documentElement.classList.add("vt-card"); try { sessionStorage.setItem("ja-vt", "1"); } catch (_) {}
+				return;
+			}
 			e.preventDefault();
 			document.body.classList.add("is-leaving");
 			setTimeout(() => (location.href = a.href), 420);

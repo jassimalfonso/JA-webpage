@@ -4,6 +4,7 @@
 	const slugOf = (a) => (a.getAttribute("href") || "").split("/").pop().replace(".html", "");
 	const pos = (s) => { const i = cfg.order.indexOf(s); return i < 0 ? 999 : i; };
 	const no = (i) => String(i + 1).padStart(2, "0");
+	const PREVIEWS = ["ikonplan", "aform", "thepanel", "showroom"]; // projects with a short preview clip in assets/previews
 	const feat = (cfg.featured || []).filter((s) => cfg.order.includes(s)).sort((a, b) => pos(a) - pos(b));
 
 	// ---- home: work list ----
@@ -26,10 +27,22 @@
 			row.innerHTML = feat.map((s) => {
 				const li = rows.find((r) => r.s === s).li, q = (c) => li.querySelector(c);
 				const line = q(".row-desc").cloneNode(true); line.querySelector(".flag")?.remove();
-				return `<a class="feat-card" href="./${s}.html"><span class="feat-img"><img src="${li.dataset.img || q(".row-thumb")?.getAttribute("src") || ""}" alt="" width="640" height="400"></span>
+				return `<a class="feat-card" href="./${s}.html"><span class="feat-img"><img src="${li.dataset.img || q(".row-thumb")?.getAttribute("src") || ""}" alt="" width="640" height="400">${PREVIEWS.includes(s) ? `<video muted loop playsinline preload="none" src="./assets/previews/${s}.mp4" aria-hidden="true"></video>` : ""}</span>
 					<span class="feat-meta mono"><span>${no(pos(s))}</span><span>${q(".row-tags").textContent}</span></span>
 					<span class="feat-name">${q(".row-title").textContent}</span><span class="feat-line">${line.textContent.trim()}</span><span class="feat-go mono">open the case →</span></a>`;
 			}).join("");
+			// silent previews: on hover with a mouse; on touch, whichever card is in view
+			const vids = [...row.querySelectorAll("video")];
+			if (vids.length && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+				const play = (v) => { v.closest(".feat-card").classList.add("is-playing"); v.play().catch(() => {}); };
+				const stop = (v) => { v.closest(".feat-card").classList.remove("is-playing"); v.pause(); };
+				if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
+					vids.forEach((v) => { const c = v.closest(".feat-card"); c.addEventListener("mouseenter", () => play(v)); c.addEventListener("focus", () => play(v)); c.addEventListener("mouseleave", () => stop(v)); c.addEventListener("blur", () => stop(v)); });
+				} else if ("IntersectionObserver" in window) {
+					const io = new IntersectionObserver((ents) => ents.forEach((e) => (e.isIntersecting ? play(e.target) : stop(e.target))), { threshold: 0.75 });
+					vids.forEach((v) => io.observe(v));
+				}
+			}
 			row.style.setProperty("--n", Math.min(4, Math.max(1, feat.length)));
 			const c = document.querySelector(".feat-count"); if (c) c.textContent = "01 / " + no(feat.length - 1);
 			if (!feat.length) row.closest(".feat").hidden = true;
