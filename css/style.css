@@ -1411,3 +1411,12 @@ body.nav-solid .nav-brand:hover svg { transform: scale(1.25); }
 ::view-transition-old(case-shot) { animation: vt-shot 0.4s ease-in both; }
 @keyframes vt-shot { to { opacity: 0; transform: scale(1.25); } }
 @media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
+
+/* phones: the big mark is dropped (it is already in the top bar), so the featured work reaches the first screen */
+@media (max-width: 560px) {
+	.hero--home .xv { display: none; }
+	.hero--home { padding-top: 8.2rem; }
+	.hero--home .hero-sub { font-size: 1.02rem; line-height: 1.45; }
+	.hero--home .titleblock { margin-top: 0.9rem; }
+	.hero--home .titleblock > div { padding: 0.45rem 0.6rem; }
+}
