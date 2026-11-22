@@ -1,5 +1,6 @@
 /* ============================================================
-   BACKGROUND SOUND — off until the visitor turns it on (/sound).
+   BACKGROUND SOUND — on by default; /sound turns it off (remembered).
+   Browsers only allow sound after a tap or key press, so it starts on the first one.
    - Remembered between pages and visits; picks up where it left off.
    - Steps aside for any demo that makes sound: an unmuted <audio> or
      <video> playing, or a demo's own Web Audio sources running.
@@ -8,7 +9,7 @@
    Load before demos.js so demo sound is seen.
    ============================================================ */
 (() => {
-	const SRC = "./assets/sound/ambient.m4a", VOL = 0.2, KEY = "ja-sound", POS = "ja-sound-pos";
+	const SRC = "./assets/sound/tokyo-night.m4a", LEN = 61.5384615, VOL = 0.24, KEY = "ja-sound", POS = "ja-sound-pos";
 	const AC = window.AudioContext || window.webkitAudioContext;
 	if (!AC) return;
 
@@ -46,8 +47,8 @@
 	/* ---- the player ---- */
 	let ctx, gain, buf, src, t0 = 0, on = false, loading;
 	const store = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
-	const pref = () => { try { return localStorage.getItem(KEY) === "on"; } catch (e) { return false; } };
-	const pos = () => (src && buf ? (ctx.currentTime - t0) % buf.duration : +(sessionStorage.getItem(POS) || 0));
+	const pref = () => { try { return localStorage.getItem(KEY) !== "off"; } catch (e) { return true; } };
+	const pos = () => (src && buf ? (ctx.currentTime - t0) % LEN : +(sessionStorage.getItem(POS) || 0));
 	const ramp = (v, s) => { const t = ctx.currentTime; gain.gain.cancelScheduledValues(t); gain.gain.setValueAtTime(gain.gain.value, t); gain.gain.linearRampToValueAtTime(v, t + s); };
 	const load = () => loading || (loading = fetch(SRC).then((r) => r.arrayBuffer()).then((a) => new Promise((ok, no) => ctx.decodeAudioData(a, ok, no))).then((b) => (buf = b)));
 	function ensure() {
@@ -57,9 +58,12 @@
 	}
 	function startLoop() {
 		if (src || !buf) return;
-		const at = pos() % buf.duration || 0;
-		src = ctx.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(gain);
-		src.start(0, at); t0 = ctx.currentTime - at;
+		// skip the encoder's silent lead-in so the loop joins with no gap
+		const d = buf.getChannelData(0); let lead = 0;
+		while (lead < d.length && lead < buf.sampleRate * 0.1 && Math.abs(d[lead]) < 1e-4) lead++;
+		const s0 = lead / buf.sampleRate, at = pos() % LEN || 0;
+		src = ctx.createBufferSource(); src.buffer = buf; src.loop = true; src.loopStart = s0; src.loopEnd = Math.min(buf.duration, s0 + LEN); src.connect(gain);
+		src.start(0, s0 + at); t0 = ctx.currentTime - at;
 	}
 	let quietTimer, wanted = false;
 	function check() {
@@ -71,7 +75,7 @@
 		else { wanted = false; ramp(0, 0.35); paint(); setTimeout(() => { if (!wanted && ctx.state === "running" && src) ctx.suspend(); }, 450); }
 	}
 	function turn(v) {
-		on = v; store(KEY, v ? "on" : null);
+		on = v; store(KEY, v ? null : "off");
 		if (v) { ensure(); ctx.resume(); load().then(() => { startLoop(); check(); }).catch(() => { on = false; paint(); }); }
 		check(); paint();
 	}
@@ -83,6 +87,7 @@
 		btn.setAttribute("aria-pressed", on ? "true" : "false");
 		btn.classList.toggle("is-ducked", on && !wanted);
 		btn.title = on ? (wanted ? "Background sound on — tap to turn off" : "Background sound waits while a demo plays") : "Turn on background sound";
+		if (on && !ctx) btn.title = "Background sound starts when you tap — tap here to start it now";
 	}
 	function mount() {
 		const links = document.querySelector(".nav-links"), theme = links && links.querySelector("[data-theme-toggle]");
@@ -91,7 +96,7 @@
 		li.innerHTML = '<button type="button" class="snd" data-sound aria-pressed="false" aria-label="Background sound">/<span class="snd-t">sound</span><span class="snd-i" aria-hidden="true">♪</span><span class="snd-bars" aria-hidden="true"><i></i><i></i><i></i></span></button>';
 		theme ? links.insertBefore(li, theme.closest("li")) : links.appendChild(li);
 		btn = li.firstChild;
-		btn.addEventListener("click", () => turn(!on));
+		btn.addEventListener("click", () => (on && !ctx ? turn(true) : turn(!on)));
 		paint();
 	}
 	document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", mount) : mount();

@@ -41,7 +41,8 @@ Edit `projects.js` (one small file at the top level) — on GitHub, tap the penc
 
 ## Background sound
 
-`/sound` in the nav turns on a quiet original music loop (`assets/sound/ambient.m4a`, ~65 s, seamless).
-It is off until a visitor turns it on, remembers the choice, and carries on from the same spot on the next page.
+A quiet original lo-fi loop plays in the background (`assets/sound/tokyo-night.m4a`, ~62 s, seamless). It is on by
+default and starts on the visitor's first tap or key press (browsers block sound before that). `/sound` in the nav
+turns it off, and that choice is remembered. It carries on from the same spot on the next page.
 It fades out whenever a demo makes sound (any unmuted audio/video, or a demo's Web Audio) and fades back in
 a moment after the demo goes quiet. Logic: `js/sound.js` — it must load before `js/demos.js`.
