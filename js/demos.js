@@ -894,7 +894,7 @@
 				</div>
 				<button type="button" class="qp-tour" data-tour aria-pressed="false">▶ guided tour</button>
 			</div>
-			<div class="qp-stage"><div class="qp-device"><iframe title="The Showroom — live Crestron CH5 mockup" loading="lazy"></iframe></div></div>
+			<div class="qp-stage"><div class="qp-device"><iframe title="The Showroom. — live Crestron CH5 mockup" loading="lazy"></iframe></div></div>
 			<p class="pl-hint mono qp-hint">tap a room. drag the dimmers. the tour keeps going until you touch the screen.</p>`;
 		const stage = $(".qp-stage", root), dev = $(".qp-device", root), frame = $("iframe", root);
 		const url = () => `${SRC}?enter=1&theme=${theme}${tour ? "&demo=1" : ""}`;

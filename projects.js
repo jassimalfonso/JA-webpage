@@ -10,6 +10,6 @@
                  scoreboard  passgen  counter  hometown
    ============================================================ */
 window.JA_PROJECTS = {
-	order: ["ikonplan", "aform", "thepanel", "showroom", "bankcal", "scoreboard", "passgen", "counter", "hometown"],
-	featured: ["ikonplan", "aform", "thepanel", "showroom"],
+	order: ["thepanel", "showroom", "ikonplan", "aform", "bankcal", "scoreboard", "passgen", "counter", "hometown"],
+	featured: ["thepanel", "showroom", "ikonplan", "aform"],
 };
